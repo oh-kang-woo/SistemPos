@@ -1,0 +1,102 @@
+/* public/css/navbar.css */
+
+.top-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Jarak atas, kanan, bawah, kiri */
+    padding: 24px 32px 20px 32px;
+    background-color: transparent; /* Transparan agar menyatu dengan background abu-abu */
+}
+
+/* Bagian Kiri (Judul & Subjudul) */
+.navbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #111827; /* Hitam pekat */
+    margin: 0;
+    line-height: 1.1;
+}
+
+.page-subtitle {
+    font-size: 14px;
+    color: #8CA0B2; /* Abu-abu kebiruan sesuai gambar */
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Bagian Kanan (Kotak-kotak Putih) */
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* Jarak antar kotak */
+}
+
+/* Gaya dasar untuk kotak putih di kanan */
+.nav-box, .nav-btn-icon {
+    background-color: #ffffff;
+    border-radius: 10px; /* Sudut melengkung */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    height: 46px; /* Tinggi seragam */
+}
+
+/* Khusus tombol lonceng */
+.nav-btn-icon {
+    width: 46px;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    color: #1F2937;
+    font-size: 18px;
+    transition: background 0.2s;
+}
+
+.nav-btn-icon:hover {
+    background-color: #F3F4F6;
+}
+
+/* Khusus kotak waktu & profil */
+.nav-box {
+    padding: 8px 16px;
+    gap: 12px;
+}
+
+/* Modifikasi padding profil karena ada gambar */
+.profile-box {
+    padding: 6px 16px 6px 8px;
+}
+
+/* Teks dalam kotak (Waktu & Profil) */
+.nav-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nav-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.nav-desc {
+    font-size: 11px;
+    color: #8CA0B2;
+    font-weight: 500;
+}
+
+/* Gambar profil */
+.profile-img {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px; /* Agak kotak sesuai gambar */
+    object-fit: cover;
+}
