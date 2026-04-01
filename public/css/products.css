@@ -1,0 +1,211 @@
+/* public/css/products.css */
+
+.products-grid::-webkit-scrollbar {
+    display: none; /* Untuk Chrome, Safari, dan Opera */
+}
+.products-grid {
+    -ms-overflow-style: none;  /* Untuk Internet Explorer dan Edge */
+    scrollbar-width: none;  /* Untuk Firefox */
+}
+
+/* 2. (Opsional) Sembunyikan juga di area item Keranjang agar seragam */
+.cart-items-section::-webkit-scrollbar {
+    display: none;
+}
+.cart-items-section {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Wadah Utama Kolom Kiri */
+.products-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-right: 8px;
+    overflow: hidden; /* 1. Tambahkan ini untuk mengunci area ini */
+}
+
+/* Judul Halaman di Kiri Atas */
+.products-header-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.products-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+}
+.products-subtitle {
+    font-size: 14px;
+    color: #8CA0B2;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Kotak Pencarian */
+.products-search {
+    background-color: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #E5E7EB;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.search-icon {
+    color: #8CA0B2;
+    font-size: 18px;
+}
+.search-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+.search-input::placeholder {
+    color: #8CA0B2;
+}
+
+/* Filter Kategori */
+.products-filters {
+    display: flex;
+    gap: 12px;
+}
+.filter-btn {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background-color: white;
+    color: #4B5563;
+    transition: all 0.2s;
+}
+.filter-btn:hover {
+    background-color: #f3f4f6;
+}
+.filter-btn.active {
+    background-color: #556B7D; /* Warna biru-abu abu sesuai gambar */
+    color: white;
+}
+
+/* Grid Kartu Produk */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    overflow-y: auto; /* Sudah ada, ini yang akan di-scroll */
+    padding-bottom: 20px;
+    flex: 1; /* 2. Tambahkan ini agar grid mengisi sisa ruang ke bawah */
+    align-content: start; /* 3. Agar kartu tetap rapat di atas jika produk sedikit */
+    padding-right: 8px; /* Memberi jarak agar scrollbar tidak menempel ke kartu */
+}
+
+/* Gaya Kartu Produk Individu */
+.product-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 16px;
+    border: 1px solid transparent;
+    transition: border 0.2s;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+.product-card:hover {
+    border: 1px solid #2D3748;
+}
+
+/* Kategori Badge di Pojok Kanan Atas Gambar */
+.product-category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #8CA0B2; /* Abu-abu kebiruan sesuai gambar */
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    z-index: 2;
+}
+
+/* Wadah Gambar Produk */
+.product-image-container {
+    width: 100%;
+    height: 140px; /* Tinggi gambar tetap */
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Gambar pas */
+}
+
+/* Info Teks di Bawah Gambar */
+.product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.product-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+.product-code {
+    font-size: 11px;
+    color: #8CA0B2;
+    margin-bottom: 4px;
+}
+
+/* Baris Bawah (Harga, Stok, Tombol +) */
+.product-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.price-stock-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+.product-price {
+    font-size: 14px;
+    font-weight: 800;
+    color: #111827;
+}
+.product-stock {
+    font-size: 10px;
+    color: #8CA0B2;
+}
+.product-stock.low-stock {
+    color: #EF4444; /* Merah untuk stok sedikit */
+}
+
+/* Tombol Tambah Produk (+) */
+.add-product-btn {
+    width: 32px;
+    height: 32px;
+    background-color: #556B7D; /* Warna seragam dengan filter active */
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.add-product-btn:hover {
+    background-color: #2D3748;
+}

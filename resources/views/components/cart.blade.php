@@ -7,7 +7,7 @@
 
     <h4 class="cart-title" style="font-size: 14px; margin-top: 10px;">Item Dipilih</h4>
 
-    <div class="cart-items">
+    <div class="cart-items-section">
         <div class="cart-item">
             <div class="item-info">
                 <span class="item-name">Mie Goreng Special</span>
@@ -41,50 +41,54 @@
         </div>
     </div>
 
-    <div class="dashed-line"></div>
+    <div class="cart-calculation-section">
 
-    <div class="summary-row">
-        <span>Sub total</span>
-        <span class="summary-value">Rp 34.000</span>
-    </div>
+        <div class="dashed-line"></div>
 
-    <div class="discount-box">
-        <span class="discount-label">Diskon</span>
-        <div class="discount-inputs">
-            <select class="discount-select">
-                <option>%</option>
-                <option>Rp</option>
-            </select>
-            <input type="number" class="discount-input" placeholder="0">
+        <div class="summary-row">
+            <span>Sub total</span>
+            <span class="summary-value">Rp 34.000</span>
         </div>
-    </div>
 
-    <div class="dashed-line"></div>
-
-    <div class="total-section">
-        <span class="total-label">Total pembayaran</span>
-        <span class="total-amount">Rp 37.740</span>
-    </div>
-
-    <div class="dashed-line"></div>
-
-    <div class="payment-box">
-        <span class="payment-label">Metode pembayaran:</span>
-        <div class="payment-methods">
-            <button class="method-btn active"><i class="fas fa-money-bill-wave"></i> Tunai</button>
-            <button class="method-btn"><i class="fas fa-qrcode"></i> QRIS</button>
-            <button class="method-btn"><i class="far fa-credit-card"></i> Debit</button>
+        <div class="discount-box">
+            <span class="label-small">Diskon</span>
+            <div class="discount-inputs">
+                <select class="discount-select">
+                    <option>%</option>
+                    <option>Rp</option>
+                </select>
+                <input type="number" class="discount-input" placeholder="0">
+            </div>
         </div>
-    </div>
 
-    <div class="customer-box">
-        <span class="discount-label">Nama Pelanggan</span>
-        <input type="text" class="customer-input" placeholder="Contoh: arip">
-    </div>
+        <div class="dashed-line"></div>
 
-    <div class="action-buttons">
-        <button class="btn-bayar">Bayar</button>
-        <button class="btn-hapus"><i class="far fa-trash-alt"></i> Hapus keranjang</button>
+        <div class="total-section">
+            <span class="total-label">Total pembayaran</span>
+            <span class="total-amount">Rp 37.740</span>
+        </div>
+
+        <div class="dashed-line"></div>
+
+        <div class="payment-box">
+            <span class="payment-label">Metode pembayaran:</span>
+            <div class="payment-methods">
+                <button class="method-btn active"><i class="fas fa-money-bill-wave"></i> Tunai</button>
+                <button class="method-btn"><i class="fas fa-qrcode"></i> QRIS</button>
+                <button class="method-btn"><i class="far fa-credit-card"></i> Debit</button>
+            </div>
+        </div>
+
+        <div class="customer-input-box">
+            <span class="label-small">Nama Pelanggan</span>
+            <input type="text" class="customer-input" placeholder="Contoh: arip">
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn-bayar">Bayar</button>
+            <button class="btn-hapus"><i class="far fa-trash-alt"></i> Hapus keranjang</button>
+        </div>
+
     </div>
 
 </aside>
