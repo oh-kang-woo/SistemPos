@@ -229,24 +229,27 @@
 }
 
 /* Footer Modal */
+/* Footer Modal */
 .modal-footer {
-    display: flex; /* Ganti grid menjadi flex untuk berdampingan di kanan */
-    justify-content: flex-end; /* Taruh tombol di kanan */
-    gap: 12px; /* Dipadatkan jaraknya */
-    padding: 16px 24px; /* Dipadatkan tingginya */
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Membagi dua kolom sama rata 50:50 */
+    gap: 12px; /* Jarak antar tombol */
+    padding: 20px 24px; /* Ruang bernapas di atas dan bawah tombol */
     border-top: 1px solid #f1f5f9;
     background: #ffffff;
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
 }
+
 .btn-print {
-    background: #0f172a;
+    width: 100%; /* Memastikan tombol mengisi penuh area grid */
+    background: #1e293b; /* Warna gelap sesuai gambar */
     color: white;
     border: none;
-    padding: 12px 18px; /* Dipadatkan paddingnya */
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 13px; /* Dipadatkan ukurannya */
+    font-size: 13px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -254,20 +257,24 @@
     gap: 8px;
     transition: 0.2s ease;
 }
+
 .btn-print:hover {
-    background: #1e293b;
+    background: #0f172a;
 }
+
 .btn-no-print {
+    width: 100%; /* Memastikan tombol mengisi penuh area grid */
     background: white;
-    color: #0f172a;
+    color: #1e293b;
     border: 1px solid #cbd5e1;
-    padding: 12px 18px; /* Dipadatkan paddingnya */
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
     font-weight: 600;
-    font-size: 13px; /* Dipadatkan ukurannya */
+    font-size: 13px;
     cursor: pointer;
     transition: 0.2s ease;
 }
+
 .btn-no-print:hover {
     background: #f8fafc;
     border-color: #94a3b8;
