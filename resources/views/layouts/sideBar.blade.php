@@ -21,7 +21,7 @@
             <span>Kasir</span>
         </a>
 
-        <a href="{{ url('/produk') }}" class="menu-item {{ request()->is('produk') ? 'active' : '' }}">
+        <a href="{{ route('product.index') }}" class="menu-item {{ request()->routeIs('product.index') ? 'active' : '' }}">
             <i class="fas fa-box"></i>
             <span>Manajemen Produk</span>
         </a>

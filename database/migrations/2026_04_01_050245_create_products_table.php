@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('jumlah_stok');
             $table->integer('min_stok')->default(10);
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->string('gambar_produk')->nullable();
             $table->timestamps();
         });
     }
