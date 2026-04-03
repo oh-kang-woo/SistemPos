@@ -3,11 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CashierController; // Tambahkan ini agar bisa memanggil CashierController
 
-Route::get('/', function () {
-
-    return view('cashier.dashboard');
-});
+// Ubah bagian ini untuk menggunakan CashierController
+Route::get('/', [CashierController::class, 'index']);
 
 Route::get('/modalpay', function () {
     return view('components.modalpembayaran');
@@ -15,7 +14,6 @@ Route::get('/modalpay', function () {
 
 Route::get('/app', function () {
     return view('layouts.app');
-
 });
 
 Route::get('/produk', [ProductController::class, 'index'])->name('product.index');
