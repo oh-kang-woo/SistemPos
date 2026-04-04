@@ -6,7 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CashierController; // Tambahkan ini agar bisa memanggil CashierController
 
 // Ubah bagian ini untuk menggunakan CashierController
-Route::get('/', [CashierController::class, 'index']);
+Route::get('/', [CashierController::class, 'index'])->name('kasir.index');
 
 Route::get('/modalpay', function () {
     return view('components.modalpembayaran');

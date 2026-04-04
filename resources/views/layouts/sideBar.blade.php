@@ -16,7 +16,7 @@
     </div>
 
     <div class="sidebar-menu">
-        <a href="{{ url('/kasir') }}" class="menu-item {{ request()->is('kasir') ? 'active' : '' }}">
+        <a href="{{ route('kasir.index') }}" class="menu-item {{ request()->routeIs('kasir.*') ? 'active' : '' }}">
             <i class="fas fa-shopping-cart"></i>
             <span>Kasir</span>
         </a>
