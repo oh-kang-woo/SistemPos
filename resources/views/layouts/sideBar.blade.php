@@ -26,7 +26,7 @@
             <span>Manajemen Produk</span>
         </a>
 
-        <a href="{{ url('/riwayat') }}" class="menu-item {{ request()->is('riwayat') ? 'active' : '' }}">
+        <a href="{{ route('transaction.index') }}" class="menu-item {{ request()->routeIs('transaction.index') ? 'active' : '' }}">
             <i class="fas fa-history"></i>
             <span>Riwayat Transaksi</span>
         </a>
