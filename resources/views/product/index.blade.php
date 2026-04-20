@@ -353,7 +353,7 @@
                 <tbody>
                     @forelse($products as $p)
                     <tr>
-                        <td style="font-weight: 600; color: #111827;">{{ $p->kode_barang }}</td>
+                        <td style="font-weight: 600; color: #111827;">{{ $p->kode_produk }}</td>
                         <td>
                             {{ $p->nama_produk }}
                         </td>
@@ -400,7 +400,6 @@
             </table>
         </div>
         <div class="card-footer">
-            <span>Menampilkan {{ $products->count() }} data</span>
             <button class="btn btn-outline"><i class="fas fa-download"></i> Ekspor PDF</button>
         </div>
     </div>
@@ -520,6 +519,7 @@
         </form>
     </div>
 </div>
+
 
 <div id="modalEditProduct" class="modal-overlay">
     <div class="modal-content large">
