@@ -12,8 +12,29 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        return view('transaction.index');
-    }
+        // 1. Ambil semua data transaksi beserta detailnya
+        $transactions = Transaction::with('details')->orderBy('created_at', 'desc')->get();
+
+        // 2. Hitung data untuk Kartu Ringkasan
+        $totalTransaksi = $transactions->count();
+        $totalPenjualan = $transactions->where('status', 'Lunas')->sum('total_pembayaran');
+
+        // 3. Hitung Laba Kotor
+        $labaKotor = 0;
+        $semuaDetail = TransactionDetail::all();
+        foreach ($semuaDetail as $detail) {
+            $produk = Product::find($detail->produk_id);
+            // Ambil harga modal dari tabel produk (jika produk sudah dihapus, anggap modal 0)
+            $hargaModal = $produk ? $produk->harga_beli : 0;
+            $totalModalItem = $hargaModal * $detail->jumlah;
+
+            $labaKotor += ($detail->subtotal - $totalModalItem);
+        }
+
+        // 4. Kirim data ke tampilan (View)
+        return view('transaction.index', compact('transactions', 'totalTransaksi', 'totalPenjualan', 'labaKotor'));
+        }
+
 
     public function checkout(Request $request)
     {
@@ -80,5 +101,11 @@ class TransactionController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function print($id_transaksi)
+    {
+        $transaction = Transaction::with('details')->findOrFail($id_transaksi);
+        return view('transaction.print', compact('transaction'));
     }
 }

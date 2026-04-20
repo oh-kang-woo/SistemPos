@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CashierController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ReportController;
 
 
 // Ubah bagian ini untuk menggunakan CashierController
@@ -27,3 +28,7 @@ Route::post('/kategori', [CategoryController::class, 'store'])->name('category.s
 
 Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::post('/transaksi/checkout', [TransactionController::class, 'checkout'])->name('transaksi.checkout');
+Route::get('/riwayat-transaksi/{id}/cetak', [TransactionController::class, 'print'])->name('transaction.print');
+
+Route::get('/laporan', [ReportController::class, 'index'])->name('report.index');
+Route::get('/laporan/cetak', [ReportController::class, 'print'])->name('report.print');

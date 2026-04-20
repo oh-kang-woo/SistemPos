@@ -31,7 +31,7 @@
             <span>Riwayat Transaksi</span>
         </a>
 
-        <a href="{{ url('/laporan') }}" class="menu-item {{ request()->is('laporan') ? 'active' : '' }}">
+        <a href="{{ route('report.index') }}" class="menu-item {{ request()->routeIs('report.*') ? 'active' : '' }}">
             <i class="fas fa-chart-bar"></i>
             <span>Laporan</span>
         </a>
