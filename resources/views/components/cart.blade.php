@@ -63,12 +63,18 @@
             <input type="text" id="input-nama-pelanggan" placeholder="Contoh: arip" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px;">
         </div>
 
-        {{-- Tombol Aksi Bawah --}}
-        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-            <button id="btn-simpan-resi" style="flex: 1; padding: 12px; border: 1px solid #bfdbfe; background: #eff6ff; color: #2563eb; border-radius: 6px; font-weight: bold;">Simpan resi</button>
-            <button style="flex: 1; padding: 12px; border: none; background: #1e293b; color: white; border-radius: 6px; font-weight: bold;">Bayar</button>
+
+       {{-- Tombol Aksi Bawah --}}
+        <div style="margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px;">
+            <button id="btn-bayar-modal" style="width: 100%; padding: 14px; border: none; background: #1e293b; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
+                Bayar Sekarang
+            </button>
+
+            {{-- Tombol Hapus Keranjang Baru --}}
+            <button onclick="clearCart()" style="width: 100%; padding: 12px; border: 1px solid #ef4444; background: #fef2f2; color: #ef4444; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
+                <i class="fas fa-trash-alt" style="margin-right: 6px;"></i> Hapus Keranjang
+            </button>
         </div>
-        <button onclick="clearCart()" style="width: 100%; padding: 12px; border: 1px solid #fecaca; background: white; color: #ef4444; border-radius: 6px; font-weight: bold; cursor: pointer;">Hapus keranjang</button>
     </div>
 </div>
 
@@ -77,20 +83,21 @@
     // --- 1. Inisialisasi Data Keranjang (Global) ---
     let cart = [];
 
-    // --- FUNGSI BARU: Untuk Memasukkan Item ke Keranjang ---
-    window.addToCart = function(name, price) {
-        // Membersihkan harga dari format string jika tidak sengaja terkirim (misal: "Rp 18.000")
+    // --- FUNGSI UPDATE: Menambahkan parameter ID ---
+    window.addToCart = function(id, name, price) {
+        // Membersihkan harga dari format string
         let cleanPrice = typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) : price;
         if (isNaN(cleanPrice)) cleanPrice = 0;
 
-        // Cek apakah item sudah ada di dalam keranjang
-        const existingItemIndex = cart.findIndex(item => item.name === name);
+        // Cek apakah item sudah ada di dalam keranjang BERDASARKAN ID
+        const existingItemIndex = cart.findIndex(item => item.id === id);
 
         if (existingItemIndex !== -1) {
             cart[existingItemIndex].qty += 1; // Tambah jumlah jika sudah ada
         } else {
-            // Jika belum ada, buat baris item baru
+            // Jika belum ada, buat baris item baru dengan menyimpan ID-nya
             cart.push({
+                id: id,
                 name: name,
                 price: cleanPrice,
                 qty: 1
@@ -200,15 +207,21 @@
         }
 
         // 3B. Script Tampilkan Popup Modal
-        const btnSimpanResi = document.getElementById('btn-simpan-resi');
-        if (btnSimpanResi) {
-            btnSimpanResi.addEventListener('click', function(e) {
+        const btnBayarModal = document.getElementById('btn-bayar-modal');
+        if (btnBayarModal) {
+            btnBayarModal.addEventListener('click', function(e) {
                 e.preventDefault();
+
+                // Cek apakah keranjang kosong
                 if (typeof cart === 'undefined' || cart.length === 0) {
                     alert('Keranjang belanja masih kosong! Silakan pilih produk terlebih dahulu.');
                     return;
                 }
+
+                // Siapkan data untuk ditampilkan di modal
                 prepareModalData();
+
+                // Tampilkan modal
                 const paymentModal = document.getElementById('modalPembayaran');
                 if (paymentModal) paymentModal.style.display = 'flex';
             });

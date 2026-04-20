@@ -54,7 +54,8 @@
         <div class="products-grid">
             @foreach($products as $product)
                 {{-- PERHATIKAN: Aku menambahkan fungsi onclick di sini --}}
-                <div class="product-card" data-category="{{ $product->kategori_id }}" onclick="addToCart('{{ $product->nama_produk }}', {{ $product->harga_jual }})" style="cursor: pointer;">
+               {{-- Tambahkan $product->id_produk di parameter pertama --}}
+<div class="product-card" data-category="{{ $product->kategori_id }}" onclick="addToCart('{{ $product->id_produk }}', '{{ $product->nama_produk }}', {{ $product->harga_jual }})" style="cursor: pointer;">
                     <span class="product-category-badge">
                         {{ $product->category->nama_kategori ?? 'Tanpa Kategori' }}
                     </span>

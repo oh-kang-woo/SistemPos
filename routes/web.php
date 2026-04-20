@@ -24,6 +24,6 @@ Route::put('/product/{id}', [ProductController::class, 'update'])->name('product
 Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 Route::post('/kategori', [CategoryController::class, 'store'])->name('category.store');
 
-Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
 
+Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
 Route::post('/transaksi/checkout', [TransactionController::class, 'checkout'])->name('transaksi.checkout');
