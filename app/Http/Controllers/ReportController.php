@@ -12,16 +12,20 @@ class ReportController extends Controller
     public function index()
     {
         // 1. Tentukan rentang waktu (30 hari terakhir)
-        $startDate = \Carbon\Carbon::now()->subDays(29)->startOfDay();
-        $endDate = \Carbon\Carbon::now()->endOfDay();
+        $startDate = Carbon::now()->subDays(29)->startOfDay();
+        $endDate = Carbon::now()->endOfDay();
 
-        // 2. Data Laporan Harian (Untuk Tabel & Chart Bar Pendapatan)
-        $laporanHarian = Transaction::whereBetween('created_at', [$startDate, $endDate])
-            ->where('status', 'Lunas')
+        // 2. Data Laporan Harian (Query Join yang sudah disesuaikan dengan DB Anda)
+        $laporanHarian = DB::table('transactions')
+            ->join('transaction_details', 'transactions.id_transaksi', '=', 'transaction_details.transaksi_id')
+            ->join('products', 'transaction_details.produk_id', '=', 'products.id_produk') // Disesuaikan!
+            ->whereBetween('transactions.created_at', [$startDate, $endDate])
+            ->where('transactions.status', 'Lunas')
             ->select(
-                \Illuminate\Support\Facades\DB::raw('DATE(created_at) as tanggal'),
-                \Illuminate\Support\Facades\DB::raw('SUM(total_pembayaran) as total_pendapatan'),
-                \Illuminate\Support\Facades\DB::raw('COUNT(id_transaksi) as jumlah_transaksi')
+                DB::raw('DATE(transactions.created_at) as tanggal'),
+                DB::raw('COUNT(DISTINCT transactions.id_transaksi) as jumlah_transaksi'),
+                DB::raw('SUM(transaction_details.jumlah * products.harga_jual) as total_pendapatan'), // Total Harga Jual
+                DB::raw('SUM(transaction_details.jumlah * products.harga_beli) as total_pengeluaran') // Total Harga Beli (Modal)
             )
             ->groupBy('tanggal')
             ->orderBy('tanggal', 'asc')
@@ -29,27 +33,30 @@ class ReportController extends Controller
 
         $labelTanggal = [];
         $dataPendapatan = [];
-        $dataPengeluaran = []; // Array untuk data chart bar pengeluaran
+        $dataPengeluaran = [];
+
         $totalSemuaPendapatan = 0;
+        $totalSemuaPengeluaran = 0; // Ini adalah total modal barang yang terjual
         $totalSemuaTransaksi = 0;
 
         foreach ($laporanHarian as $data) {
-            $labelTanggal[] = \Carbon\Carbon::parse($data->tanggal)->format('d M');
+            $labelTanggal[] = Carbon::parse($data->tanggal)->format('d M');
             $dataPendapatan[] = $data->total_pendapatan;
-
-            // Catatan: Karena belum tahu struktur tabel Pengeluaranmu,
-            // ini saya isi dengan data dummy (acak) agar chart langsung tampil mirip gambarmu.
-            // Jika tabel Pengeluaran sudah ada, ganti kode ini dengan kueri database sungguhan.
-            $dataPengeluaran[] = rand(500000, 2500000);
+            $dataPengeluaran[] = $data->total_pengeluaran;
 
             $totalSemuaPendapatan += $data->total_pendapatan;
+            $totalSemuaPengeluaran += $data->total_pengeluaran;
             $totalSemuaTransaksi += $data->jumlah_transaksi;
         }
 
-        // 3. Data Metode Pembayaran (Untuk Chart Donut)
-        $metodePembayaran = Transaction::whereBetween('created_at', [$startDate, $endDate])
+        // 3. Hitung Pendapatan Bersih Keseluruhan (Pendapatan - Modal)
+        $totalPendapatanBersih = $totalSemuaPendapatan - $totalSemuaPengeluaran;
+
+        // 4. Data Metode Pembayaran (Untuk Chart Donut)
+        $metodePembayaran = DB::table('transactions')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->where('status', 'Lunas')
-            ->select('metode_pembayaran', \Illuminate\Support\Facades\DB::raw('COUNT(id_transaksi) as total'))
+            ->select('metode_pembayaran', DB::raw('COUNT(id_transaksi) as total'))
             ->groupBy('metode_pembayaran')
             ->get();
 
@@ -58,22 +65,25 @@ class ReportController extends Controller
 
         return view('report.index', compact(
             'laporanHarian', 'labelTanggal', 'dataPendapatan', 'dataPengeluaran',
-            'totalSemuaPendapatan', 'totalSemuaTransaksi',
+            'totalSemuaPendapatan', 'totalSemuaTransaksi', 'totalPendapatanBersih',
             'labelMetode', 'dataMetode'
         ));
     }
 
     public function print()
     {
-        // Ambil data yang sama untuk halaman cetak
-        $laporanHarian = Transaction::where('status', 'Lunas')
+        // Sesuaikan kueri print jika dibutuhkan
+        $laporanHarian = DB::table('transactions')
+            ->join('transaction_details', 'transactions.id_transaksi', '=', 'transaction_details.transaksi_id')
+            ->join('products', 'transaction_details.produk_id', '=', 'products.id_produk')
+            ->where('transactions.status', 'Lunas')
             ->select(
-                DB::raw('DATE(created_at) as tanggal'),
-                DB::raw('SUM(total_pembayaran) as total_pendapatan'),
-                DB::raw('COUNT(id_transaksi) as jumlah_transaksi')
+                DB::raw('DATE(transactions.created_at) as tanggal'),
+                DB::raw('COUNT(DISTINCT transactions.id_transaksi) as jumlah_transaksi'),
+                DB::raw('SUM(transaction_details.jumlah * products.harga_jual) as total_pendapatan')
             )
             ->groupBy('tanggal')
-            ->orderBy('tanggal', 'desc') // Diurutkan dari yang terbaru
+            ->orderBy('tanggal', 'desc')
             ->get();
 
         $totalPendapatan = $laporanHarian->sum('total_pendapatan');
