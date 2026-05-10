@@ -300,6 +300,9 @@
             <button class="btn btn-outline" onclick="openModal('modalCategory')">
                 <i class="fas fa-plus"></i> Tambah Kategori
             </button>
+            <button class="btn btn-outline" onclick="openModal('modalKelolaCategory')">
+                <i class="fas fa-cog"></i> Kelola Kategori
+            </button>
             <button class="btn btn-primary" onclick="openModal('modalProduct')">
                 <i class="fas fa-plus"></i> Tambah Barang
             </button>
@@ -330,7 +333,7 @@
             </select>
             <div class="search-wrapper">
                 <i class="fas fa-search"></i>
-                <input type="text" class="search-input" placeholder="Cari nama atau kode barang...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Cari nama atau kode barang...">
             </div>
         </div>
 
@@ -350,7 +353,7 @@
                         <th style="text-align: center;">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tableBody">
                     @forelse($products as $p)
                     <tr>
                         <td style="font-weight: 600; color: #111827;">{{ $p->kode_produk }}</td>
@@ -408,7 +411,7 @@
 <div id="modalCategory" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Tambah Kategori Baru</h3>
+            <h3>Tambah Kategori</h3>
             <button type="button" class="close-btn" onclick="closeModal('modalCategory')">&times;</button>
         </div>
         <form action="{{ route('category.store') }}" method="POST" enctype="multipart/form-data">
@@ -433,6 +436,29 @@
             </div>
         </form>
     </div>
+</div>
+
+<div id="modalKelolaCategory" class="modal-overlay">
+<div class="modal-content">
+    <div class="modal-header">
+        <h3>Kelola Kategori</h3>
+        <button class="close-btn" onclick="closeModal('modalCategory')">×</button>
+    </div>
+
+    <label style="font-size: 13px; color: #475569; font-weight: 500; display: block; margin-left: 10px; margin-bottom: 10px;">Daftar Kategori Tersedia</label>
+    <div style="max-height: 200px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+        @foreach($categories as $category)
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #e2e8f0;">
+            <span style="font-size: 14px; color: #1e293b;">{{ $category->nama_kategori }}</span>
+            <form action="{{ route('category.destroy', $category->id_kategori) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua barang yang terkait dengan kategori ini juga akan terhapus.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px;">🗑️ Hapus</button>
+            </form>
+        </div>
+        @endforeach
+    </div>
+</div>
 </div>
 
 <div id="modalProduct" class="modal-overlay">
@@ -622,6 +648,21 @@
         }
     }
 
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Tutup modal jika user klik area gelap di luarnya
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = 'none';
+        }
+    }
+
     function openEditModal(button) {
         let id = button.getAttribute('data-id');
         let form = document.getElementById('editForm');
@@ -639,6 +680,40 @@
 
         openModal('modalEditProduct');
     }
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+    let searchQuery = this.value.toLowerCase();
+    let tableRows = document.querySelectorAll('#tableBody tr:not(#emptySearchRow)');
+    let visibleCount = 0;
+
+    // Looping semua baris tabel
+    tableRows.forEach(row => {
+        let text = row.textContent.toLowerCase();
+        if(text.includes(searchQuery)) {
+            row.style.display = ''; // Tampilkan baris
+            visibleCount++;
+        } else {
+            row.style.display = 'none'; // Sembunyikan baris
+        }
+    });
+
+    // Handle jika tidak ada barang yang cocok
+    let emptyRow = document.getElementById('emptySearchRow');
+    if(visibleCount === 0) {
+        if(!emptyRow) {
+            let tbody = document.getElementById('tableBody');
+            let tr = document.createElement('tr');
+            tr.id = 'emptySearchRow';
+            tr.innerHTML = `<td colspan="8" style="text-align: center; padding: 30px; color: #ef4444; font-weight: 500;">Berdasarkan pencarian "${this.value}", barang yang dicari tidak ada.</td>`;
+            tbody.appendChild(tr);
+        } else {
+            emptyRow.style.display = '';
+            emptyRow.innerHTML = `<td colspan="8" style="text-align: center; padding: 30px; color: #ef4444; font-weight: 500;">Berdasarkan pencarian "${this.value}", barang yang dicari tidak ada.</td>`;
+        }
+    } else {
+        if(emptyRow) emptyRow.style.display = 'none';
+    }
+    });
 </script>
 
 @endsection
