@@ -36,7 +36,7 @@
             <span>Laporan</span>
         </a>
 
-        <a href="{{ url('/pengeluaran') }}" class="menu-item {{ request()->is('pengeluaran') ? 'active' : '' }}">
+        <a href="{{ route('expense.index') }}" class="menu-item {{ request()->routeIs('expense.*') ? 'active' : '' }}">
             <i class="fas fa-wallet"></i>
             <span>Pengeluaran</span>
         </a>
