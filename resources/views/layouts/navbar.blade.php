@@ -18,13 +18,20 @@
             </div>
         </div>
 
-        <div class="nav-box profile-box">
-            <img src="https://ui-avatars.com/api/?name=Akbar+Hidayat&background=random" alt="Profil" class="profile-img">
+        <a href="{{ route('profile.edit') }}" class="nav-box profile-box" style="text-decoration: none; color: inherit; cursor: pointer;">
+
+            @if(Auth::user()->profile_photo)
+                <img src="{{ asset('storage/' . Auth::user()->profile_photo) }}" alt="Profil" class="profile-img">
+            @else
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=random" alt="Profil" class="profile-img">
+            @endif
+
             <div class="nav-text">
-                <span class="nav-title">Akbar Hidayat</span>
-                <span class="nav-desc">Kasir</span>
+                <span class="nav-title">{{ Auth::user()->name }}</span>
+
+                <span class="nav-desc">{{ ucfirst(Auth::user()->role) }}</span>
             </div>
-        </div>
+        </a>
 
     </div>
 </header>

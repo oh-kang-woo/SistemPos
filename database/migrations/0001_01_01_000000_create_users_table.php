@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+
+            // --- TAMBAHAN BARU UNTUK APLIKASI KASIR ---
+            $table->string('role')->default('karyawan'); // Pilihan: manajer, karyawan
+            $table->string('phone_number')->nullable(); // Nomor HP (nullable jika tidak wajib saat daftar)
+            $table->string('profile_photo')->nullable(); // Menyimpan path/nama file foto profil
+            // ------------------------------------------
+
             $table->rememberToken();
             $table->timestamps();
         });
