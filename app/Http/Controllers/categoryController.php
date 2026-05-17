@@ -32,4 +32,15 @@ class CategoryController extends Controller
 
         return redirect()->route('product.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
+
+    public function destroyCategory($id)
+    {
+        $category = Category::findOrFail($id);
+        if ($category->products()->count() > 0) {
+            return redirect()->route('product.index')->with('error', 'Kategori tidak dapat dihapus karena masih memiliki produk terkait.');
+        }
+
+        $category->delete();
+        return redirect()->route('product.index')->with('success', 'Kategori berhasil dihapus.');
+    }
 }

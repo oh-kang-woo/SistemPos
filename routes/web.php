@@ -26,6 +26,7 @@ Route::post('/produk', [ProductController::class, 'store'])->name('product.store
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
 Route::post('/kategori', [CategoryController::class, 'store'])->name('category.store');
+Route::delete('/kategori/{id}', [CategoryController::class, 'destroyCategory'])->name('category.destroy');
 
 // Routes untuk transaksi
 Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction.index');
