@@ -70,4 +70,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.edit');
     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
+    // Routes untuk pengaturan
+    Route::get('/pengaturan', [SettingController::class, 'index'])->name('setting.index');
+    Route::post('/pengaturan/profil', [SettingController::class, 'updateProfil'])->name('setting.updateProfil');
+    Route::post('/pengaturan/struk', [SettingController::class, 'updateStruk'])->name('setting.updateStruk');
+    Route::post('/pengaturan/user', [SettingController::class, 'storeUser'])->name('setting.storeUser')->middleware('auth');
+
 });

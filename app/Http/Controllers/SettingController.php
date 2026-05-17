@@ -68,4 +68,26 @@ class SettingController extends Controller
 
         return redirect()->back()->with('success', 'Pengaturan struk & cetak berhasil diperbarui!');
     }
+
+    public function storeUser(Request $request)
+    {
+        // 1. Validasi input dari form
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'role' => 'required|string' // Misal: admin atau kasir
+        ]);
+
+        // 2. Simpan user baru ke database
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password), // Password otomatis di-enkripsi
+            'role' => $request->role,
+        ]);
+
+        // 3. Kembali ke halaman dengan pesan sukses
+        return redirect()->back()->with('success', 'Pengguna baru berhasil ditambahkan!');
+    }
 }

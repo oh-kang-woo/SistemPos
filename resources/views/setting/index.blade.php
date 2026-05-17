@@ -141,38 +141,99 @@
             </form>
         </div>
 
-        <div id="tab-pengguna" class="tab-content" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div>
-                    <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">Daftar Pengguna</h3>
-                    <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">Manajemen hak akses pengguna aplikasi</p>
-                </div>
-                <button class="btn-submit" style="width: auto; padding: 10px 16px;" onclick="alert('Fitur tambah ter-lock sementara menunggu pengerjaan tim Auth')">+ Tambah Pengguna</button>
+    <div id="tab-pengguna" class="tab-content" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0;">Daftar Pengguna</h3>
+            <p style="font-size: 13px; color: #64748b; margin: 4px 0 0 0;">Manajemen hak akses pengguna aplikasi</p>
+        </div>
+
+        <button type="button" onclick="bukaModalUser()" style="background-color: #1e293b; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-user-plus"></i> Tambah Pengguna
+        </button>
+    </div>
+
+    <div id="modalNativeUser" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.6); align-items: center; justify-content: center;">
+
+        <div style="background-color: #ffffff; width: 500px; max-width: 90%; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden; position: relative;">
+
+            <div style="padding: 16px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <h5 style="margin: 0; font-weight: 600; color: #1e293b; font-size: 16px;">Tambah Pengguna Baru</h5>
+                <button type="button" onclick="tutupModalUser()" style="background: none; border: none; font-size: 20px; color: #64748b; cursor: pointer;">&times;</button>
             </div>
 
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-                <thead>
-                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                        <th style="padding: 12px; color: #475569;">Nama Pengguna</th>
-                        <th style="padding: 12px; color: #475569;">Email</th>
-                        <th style="padding: 12px; color: #475569;">Posisi (Role)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($users as $user)
-                    <tr style="border-bottom: 1px solid #e2e8f0;">
-                        <td style="padding: 12px; color: #1e293b; font-weight: 500;">{{ $user->nama ?? $user->name }}</td>
-                        <td style="padding: 12px; color: #64748b;">{{ $user->email }}</td>
-                        <td style="padding: 12px;"><span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 500;">{{ $user->role ?? 'Kasir' }}</span></td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="3" style="padding: 20px; text-align: center; color: #94a3b8;">Belum ada data pengguna bawaan.</td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <form action="{{ route('setting.storeUser') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #334155;">Nama Pengguna <span style="color: red;">*</span></label>
+                        <input type="text" name="name" required placeholder="Contoh: Akbar Hidayat" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #334155;">Nomor telepon <span style="color: red;">*</span></label>
+                        <input type="text" name="phone" required placeholder="+62" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #334155;">Posisi <span style="color: red;">*</span></label>
+                        <select name="role" required style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; box-sizing: border-box;">
+                            <option value="" selected disabled>Pilih Posisi</option>
+                            <option value="admin">Admin / Pemilik</option>
+                            <option value="kasir">Kasir</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #334155;">Password <span style="color: red;">*</span></label>
+                        <input type="password" name="password" required placeholder="******" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none; box-sizing: border-box;">
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; font-size: 14px; color: #334155;">Foto Profil (opsional)</label>
+                        <div style="border: 2px dashed #cbd5e1; border-radius: 8px; padding: 20px; text-align: center; cursor: pointer; background: #f8fafc;" onclick="document.getElementById('profile_photo').click()">
+                            <i class="fas fa-file-upload" style="font-size: 24px; color: #94a3b8; margin-bottom: 8px;"></i>
+                            <p style="font-size: 12px; color: #64748b; margin: 0;">Klik untuk upload</p>
+                            <span style="font-size: 11px; color: #94a3b8;">Format: JPG, PNG, atau SVG (Maks: 2MB)</span>
+                            <input type="file" id="profile_photo" name="profile_photo" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding: 16px 24px; border-top: 1px solid #e2e8f0; display: flex; gap: 12px; background: #f8fafc;">
+                    <button type="button" onclick="tutupModalUser()" style="flex: 1; padding: 10px; border: 1px solid #cbd5e1; background: white; color: #475569; border-radius: 6px; font-weight: 500; cursor: pointer;">Batal</button>
+                    <button type="submit" style="flex: 1; padding: 10px; border: none; background: #1e293b; color: white; border-radius: 6px; font-weight: 500; cursor: pointer;">Simpan Pengguna</button>
+                </div>
+            </form>
         </div>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                    <th style="padding: 12px; color: #475569;">Nama Pengguna</th>
+                    <th style="padding: 12px; color: #475569;">Email</th>
+                    <th style="padding: 12px; color: #475569;">Posisi (Role)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($users as $user)
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="padding: 12px; color: #1e293b; font-weight: 500;">{{ $user->nama ?? $user->name }}</td>
+                    <td style="padding: 12px; color: #64748b;">{{ $user->email }}</td>
+                    <td style="padding: 12px;"><span style="background: #e0f2fe; color: #0369a1; padding: 4px 8px; border-radius: 6px; font-size: 12px;">{{ $user->role ?? 'Kasir' }}</span></td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="3" style="padding: 20px; text-align: center; color: #94a3b8;">Belum ada data pengguna.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
 
     </div>
 </div>
@@ -189,6 +250,23 @@
         }
         document.getElementById(tabId).style.display = "block";
         evt.currentTarget.classList.add("active");
+    }
+    function bukaModalUser() {
+        // Mengubah display menjadi flex agar posisinya ke tengah layar
+        document.getElementById('modalNativeUser').style.display = 'flex';
+    }
+
+    function tutupModalUser() {
+        // Menyembunyikan kembali modalnya
+        document.getElementById('modalNativeUser').style.display = 'none';
+    }
+
+    // Tutup modal jika user mengklik area gelap di luar kotak putih
+    window.onclick = function(event) {
+        var modal = document.getElementById('modalNativeUser');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 </script>
 @endsection
