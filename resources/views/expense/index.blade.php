@@ -74,20 +74,25 @@
     <div class="count">{{ $jumlahPengeluaran }} Pengeluaran tercatat</div>
 </div>
 
-<div class="filter-section">
+<form method="GET" action="{{ route('expense.index') }}" class="filter-section">
     <div class="filter-left">
-        <select class="filter-select">
-            <option>Semua kategori</option>
+        <select name="kategori" class="filter-select" onchange="this.form.submit()">
+            <option value="">Semua kategori</option>
             @foreach($kategori as $kat)
-                <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
+                <option value="{{ $kat->id }}" {{ request('kategori') == $kat->id ? 'selected' : '' }}>
+                    {{ $kat->nama_kategori }}
+                </option>
             @endforeach
         </select>
-        <button class="filter-btn">📅 Filter periode</button>
+        @if(request('search') || request('kategori'))
+            <a href="{{ route('expense.index') }}" class="btn-outline" style="text-decoration:none;">Reset Filter</a>
+        @endif
     </div>
-    <div>
-        <input type="text" class="search-input" placeholder="🔍 Cari deskripsi pengeluaran...">
+    <div style="display: flex; gap: 8px;">
+        <input type="text" name="search" value="{{ request('search') }}" class="search-input" placeholder="🔍 Cari deskripsi pengeluaran...">
+        <button type="submit" class="btn-primary">Cari</button>
     </div>
-</div>
+</form>
 
 <div class="table-container">
     <table>
@@ -97,14 +102,13 @@
                 <th>Kategori pengeluaran</th>
                 <th>Deskripsi</th>
                 <th>Nominal</th>
-                <th>Pengguna</th>
                 <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse($pengeluaran as $index => $item)
             <tr>
-                <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y H:i') }}</td>
+                <td>{{ \Carbon\Carbon::parse($item->tanggal)->format('d/m/Y') }}</td>
                 <td>
                     <span class="badge badge-{{ ($index % 4) + 1 }}">
                         {{ $item->category->nama_kategori ?? 'Umum' }}
@@ -112,23 +116,65 @@
                 </td>
                 <td>{{ $item->deskripsi ?? '-' }}</td>
                 <td class="text-red">Rp {{ number_format($item->nominal, 0, ',', '.') }}</td>
-                <td>{{ $item->pengguna }}</td>
-                <td>
-                    <button style="background:none; border:none; cursor:pointer;">✏️</button>
-                    <button style="background:none; border:none; cursor:pointer; color:red;">🗑️</button>
+                <td style="display: flex; gap: 8px;">
+                    <button type="button" onclick='editModalPengeluaran(@json($item))' style="background:none; border:none; cursor:pointer;" title="Edit">✏️</button>
+
+                    <form action="{{ route('pengeluaran.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus data pengeluaran ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background:none; border:none; cursor:pointer; color:red;" title="Hapus">🗑️</button>
+                    </form>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" style="text-align: center; padding: 30px;">Belum ada data pengeluaran.</td>
+                <td colspan="5" style="text-align: center; padding: 30px;">Belum ada data pengeluaran.</td>
             </tr>
             @endforelse
         </tbody>
     </table>
 </div>
+
 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
     <span style="font-size: 13px; color: #64748b;">Menampilkan 1 - {{ $jumlahPengeluaran }} dari {{ $jumlahPengeluaran }} data</span>
-    <button class="btn-outline">🖨️ Cetak Pengeluaran</button>
+    <a href="{{ route('pengeluaran.print', request()->all()) }}" target="_blank" class="btn-outline" style="text-decoration:none;">🖨️ Cetak Pengeluaran</a>
+</div>
+
+<div class="modal-overlay" id="modalEditPengeluaran">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Pengeluaran</h3>
+            <button class="close-btn" type="button" onclick="closeModal('modalEditPengeluaran')">×</button>
+        </div>
+        <form id="formEditPengeluaran" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="form-group">
+                <label>Tanggal *</label>
+                <input type="date" name="tanggal" id="edit_tanggal" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Kategori *</label>
+                <select name="expense_category_id" id="edit_kategori" class="form-control" required>
+                    @foreach($kategori as $kat)
+                        <option value="{{ $kat->id }}">{{ $kat->nama_kategori }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Deskripsi</label>
+                <textarea name="deskripsi" id="edit_deskripsi" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Nominal pengeluaran (Rp) *</label>
+                <input type="number" name="nominal" id="edit_nominal" class="form-control" required>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-outline" onclick="closeModal('modalEditPengeluaran')">Batal</button>
+                <button type="submit" class="btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="modal-overlay" id="modalKategori">
@@ -217,6 +263,31 @@
         if (event.target.classList.contains('modal-overlay')) {
             event.target.style.display = 'none';
         }
+    }
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = 'flex';
+    }
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.style.display = 'none';
+        }
+    }
+
+    // Fungsi baru untuk memasukkan data ke dalam Modal Edit
+    function editModalPengeluaran(item) {
+        // Arahkan action form ke route update dengan ID item
+        document.getElementById('formEditPengeluaran').action = "/pengeluaran/" + item.id;
+
+        // Isi input dengan data saat ini (hanya ambil tanggalnya, abaikan jam)
+        document.getElementById('edit_tanggal').value = item.tanggal.substring(0, 10);
+        document.getElementById('edit_kategori').value = item.expense_category_id;
+        document.getElementById('edit_deskripsi').value = item.deskripsi;
+        document.getElementById('edit_nominal').value = item.nominal;
+
+        openModal('modalEditPengeluaran');
     }
 </script>
 @endsection

@@ -66,6 +66,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('expense.index');
     Route::post('/pengeluaran/kategori', [ExpenseController::class, 'storeCategory'])->name('pengeluaran.kategori.store');
     Route::post('/pengeluaran', [ExpenseController::class, 'storeExpense'])->name('pengeluaran.store');
+    Route::put('/pengeluaran/{id}', [ExpenseController::class, 'updateExpense'])->name('pengeluaran.update');
+    Route::delete('/pengeluaran/{id}', [ExpenseController::class, 'destroyExpense'])->name('pengeluaran.destroy');
+    Route::get('/pengeluaran-print', [ExpenseController::class, 'print'])->name('pengeluaran.print');
 
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.edit');
     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
