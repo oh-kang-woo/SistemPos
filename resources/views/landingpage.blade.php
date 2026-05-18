@@ -22,9 +22,34 @@
                     </button>
                 </form>
             @else
-                <a href="{{ route('login') }}" class="btn-logout" style="text-decoration: none; display: inline-block; text-align: center; background: #192231; color: white; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 13px;">
-                    Log In
-                </a>
+                <div style="display: flex; align-items: center; gap: 15px;">
+
+                    <a href="{{ route('login') }}"
+                       style="
+                       text-decoration: none;
+                       color: #192231;
+                       font-weight: 600;
+                       font-size: 15px;
+                       padding: 10px 14px;
+                       ">
+                        Masuk
+                    </a>
+
+                    <a href="{{ route('register') }}"
+                       style="
+                       text-decoration: none;
+                       background: #192231;
+                       color: white;
+                       font-weight: 600;
+                       font-size: 15px;
+                       padding: 12px 24px;
+                       border-radius: 12px;
+                       display: inline-block;
+                       ">
+                        Daftar
+                    </a>
+
+                </div>
             @endauth
         </div>
     </nav>
@@ -40,6 +65,7 @@
                 <a href="{{ route('register') }}" class="btn-primary" style="text-decoration: none;">Mulai Sekarang <i class="fa-solid fa-arrow-right"></i></a>
             @endauth
         </div>
+
         <div class="hero-image animate-fade-in">
             <img src="{{ asset('images/tablet.jpeg') }}" alt="SwifttBill Tablet Dashboard">
         </div>
@@ -50,55 +76,97 @@
         <p class="section-subtitle">Solusi lengkap untuk manajemen operasional harian Anda.</p>
 
         <div class="features-container-grid">
+
             <div class="feature-card">
                 <div>
-                    <div class="icon-badge badge-blue"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div class="icon-badge badge-blue">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </div>
+
                     <h3>Sistem Kasir Cepat</h3>
-                    <p>Transaksi kilat dengan antarmuka intuitif. Mendukung berbagai metode pembayaran mulai dari Tunai, QRIS, hingga Kartu Debit.</p>
+
+                    <p>
+                        Transaksi kilat dengan antarmuka intuitif.
+                        Mendukung berbagai metode pembayaran mulai dari Tunai,
+                        QRIS, hingga Kartu Debit.
+                    </p>
                 </div>
             </div>
 
             <div class="feature-card">
                 <div>
-                    <div class="icon-badge badge-slate"><i class="fa-solid fa-box"></i></div>
+                    <div class="icon-badge badge-slate">
+                        <i class="fa-solid fa-box"></i>
+                    </div>
+
                     <h3>Manajemen Produk</h3>
-                    <p>Atur stok, kategori, dan varian produk dengan mudah. Notifikasi otomatis saat stok barang mulai menipis.</p>
+
+                    <p>
+                        Atur stok, kategori, dan varian produk dengan mudah.
+                        Notifikasi otomatis saat stok barang mulai menipis.
+                    </p>
                 </div>
             </div>
 
             <div class="feature-card">
                 <div>
-                    <div class="icon-badge badge-indigo"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <div class="icon-badge badge-indigo">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                    </div>
+
                     <h3>Laporan Penjualan</h3>
-                    <p>Dapatkan wawasan mendalam melalui laporan harian, mingguan, dan bulanan yang akurat dan mudah dimengerti.</p>
+
+                    <p>
+                        Dapatkan wawasan mendalam melalui laporan harian,
+                        mingguan, dan bulanan yang akurat dan mudah dimengerti.
+                    </p>
                 </div>
             </div>
 
             <div class="history-card">
                 <div class="history-content">
                     <h2>Riwayat Transaksi Terpusat</h2>
-                    <p>Akses semua data transaksi dari masa lalu hingga sekarang dengan sistem pencarian filter yang sangat detail.</p>
-                    <a href="#" class="btn-secondary">Cek Riwayat</a>
+
+                    <p>
+                        Akses semua data transaksi dari masa lalu hingga sekarang
+                        dengan sistem pencarian filter yang sangat detail.
+                    </p>
+
+                    <a href="#" class="btn-secondary">
+                        Cek Riwayat
+                    </a>
                 </div>
+
                 <i class="fa-solid fa-clock-rotate-left bg-icon-clock"></i>
             </div>
 
             <div class="feature-card">
                 <div>
-                    <div class="icon-badge badge-red"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    <div class="icon-badge badge-red">
+                        <i class="fa-solid fa-money-bill-wave"></i>
+                    </div>
+
                     <h3>Catat Pengeluaran</h3>
-                    <p>Pantau arus kas keluar masuk untuk menjaga kesehatan finansial bisnis Anda tetap stabil.</p>
+
+                    <p>
+                        Pantau arus kas keluar masuk untuk menjaga kesehatan
+                        finansial bisnis Anda tetap stabil.
+                    </p>
                 </div>
             </div>
+
         </div>
     </section>
 
     <section class="analytics-banner">
+
         <div class="analytics-visual">
+
             <div class="chart-header">
                 <span>Grafik Pendapatan</span>
                 <span style="color: #64748b;">Minggu Ini</span>
             </div>
+
             <div class="chart-bars-solid">
                 <div class="bar-solid bs-1"></div>
                 <div class="bar-solid bs-2"></div>
@@ -108,22 +176,58 @@
                 <div class="bar-solid bs-6"></div>
                 <div class="bar-solid bs-7"></div>
             </div>
+
             <div class="chart-footer">
-                <div class="stat-box"><span>Total Txs</span><h4>1.284</h4></div>
-                <div class="stat-box"><span>Laba Kotor</span><h4>45.2jt</h4></div>
-                <div class="stat-box"><span>Growth</span><h4 class="text-green">+12%</h4></div>
+                <div class="stat-box">
+                    <span>Total Txs</span>
+                    <h4>1.284</h4>
+                </div>
+
+                <div class="stat-box">
+                    <span>Laba Kotor</span>
+                    <h4>45.2jt</h4>
+                </div>
+
+                <div class="stat-box">
+                    <span>Growth</span>
+                    <h4 class="text-green">+12%</h4>
+                </div>
             </div>
+
         </div>
 
         <div class="analytics-content">
+
             <h2>Analitik Cerdas dalam Genggaman</h2>
-            <p>Jangan biarkan bisnis berjalan tanpa arah. SwifttBill menyediakan data analitik real-time yang membantu Anda membuat keputusan strategis berbasis fakta, bukan sekadar intuisi.</p>
+
+            <p>
+                Jangan biarkan bisnis berjalan tanpa arah.
+                SwifttBill menyediakan data analitik real-time
+                yang membantu Anda membuat keputusan strategis
+                berbasis fakta, bukan sekadar intuisi.
+            </p>
+
             <div class="checklist-items">
-                <div class="check-item"><i class="fa-regular fa-circle-check"></i> Monitor performa outlet kapan pun dan di mana pun.</div>
-                <div class="check-item"><i class="fa-regular fa-circle-check"></i> Identifikasi produk paling laku dan paling tidak laku.</div>
-                <div class="check-item"><i class="fa-regular fa-circle-check"></i> Ekspor laporan keuangan hanya dengan satu klik.</div>
+
+                <div class="check-item">
+                    <i class="fa-regular fa-circle-check"></i>
+                    Monitor performa outlet kapan pun dan di mana pun.
+                </div>
+
+                <div class="check-item">
+                    <i class="fa-regular fa-circle-check"></i>
+                    Identifikasi produk paling laku dan paling tidak laku.
+                </div>
+
+                <div class="check-item">
+                    <i class="fa-regular fa-circle-check"></i>
+                    Ekspor laporan keuangan hanya dengan satu klik.
+                </div>
+
             </div>
+
         </div>
+
     </section>
 
 </body>
