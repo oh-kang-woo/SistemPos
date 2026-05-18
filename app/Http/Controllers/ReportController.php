@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Transaction;
+use App\Models\Expense;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -12,46 +14,71 @@ class ReportController extends Controller
 {
     $businessId = auth()->user()->business_id;
 
-    // Tentukan rentang tanggal (default 30 hari terakhir)
-    $startDate = $request->get('start_date', now()->subDays(30)->format('Y-m-d') . ' 00:00:00');
-    $endDate = $request->get('end_date', now()->format('Y-m-d') . ' 23:59:59');
+        // 2. Data Penjualan & Modal Barang
+        $laporanHarian = DB::table('transactions')
+            ->join('transaction_details', 'transactions.id_transaksi', '=', 'transaction_details.transaksi_id')
+            ->join('products', 'transaction_details.produk_id', '=', 'products.id_produk')
+            ->whereBetween('transactions.created_at', [$startDate, $endDate])
+            ->where('transactions.status', 'Lunas')
+            ->select(
+                DB::raw('DATE(transactions.created_at) as tanggal'),
+                DB::raw('COUNT(DISTINCT transactions.id_transaksi) as jumlah_transaksi'),
+                DB::raw('SUM(transaction_details.jumlah * products.harga_jual) as total_pendapatan'),
+                DB::raw('SUM(transaction_details.jumlah * products.harga_beli) as total_modal_barang')
+            )
+            ->groupBy('tanggal')
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
-    // 1. Query Data Laporan Utama (Tabel & Grafik Garis/Batang)
-    $reportData = DB::table('transactions')
-        ->join('transaction_details', 'transactions.id_transaksi', '=', 'transaction_details.transaksi_id')
-        ->join('products', 'transaction_details.produk_id', '=', 'products.id_produk')
-        ->select(
-            DB::raw('DATE(transactions.created_at) as tanggal'),
-            DB::raw('COUNT(DISTINCT transactions.id_transaksi) as jumlah_transaksi'),
-            DB::raw('SUM(transaction_details.jumlah * products.harga_jual) as total_pendapatan'),
-            DB::raw('SUM(transaction_details.jumlah * products.harga_beli) as total_pengeluaran')
-        )
-        ->where('transactions.business_id', $businessId)
-        ->whereBetween('transactions.created_at', [$startDate, $endDate])
-        ->groupBy('tanggal')
-        ->orderBy('tanggal', 'asc')
-        ->get();
+        // 3. Tarik Data Pengeluaran Operasional per Hari
+        $pengeluaranOperasional = DB::table('expenses')
+            ->whereBetween('tanggal', [$startDate, $endDate])
+            ->select(DB::raw('DATE(tanggal) as tanggal'), DB::raw('SUM(nominal) as total_operasional'))
+            ->groupBy('tanggal')
+            ->pluck('total_operasional', 'tanggal');
 
-    // --- PERBAIKAN: Mengganti query metode_pembayaran yang eror dengan data default ---
-    // Jika nanti kamu menambahkan kolom metode_pembayaran di migrasi, kamu bisa kembalikan ke query DB.
-    $labelMetode = ['Tunai / Cash'];
-    $dataMetode  = [$reportData->sum('jumlah_transaksi')]; // Mengasumsikan semua trx sementara dianggap tunai
+        $labelTanggal = [];
+        $dataPendapatan = [];
+        $dataPengeluaran = [];
 
-    // 3. Kalkulasi Ringkasan Box Atas
-    $totalSemuaPendapatan  = $reportData->sum('total_pendapatan');
-    $totalPengeluaran       = $reportData->sum('total_pengeluaran');
-    $totalPendapatanBersih  = $totalSemuaPendapatan - $totalPengeluaran;
-    $totalSemuaTransaksi    = $reportData->sum('jumlah_transaksi');
+        $totalSemuaPendapatan = 0;
+        $totalSemuaTransaksi = 0;
 
-    // 4. Ekstraksi Data Array Untuk Dikonsumsi Chart.js
-    $labelTanggal    = [];
-    $dataPendapatan  = [];
-    $dataPengeluaran = [];
+        // 4. Gabungkan Data (Modal + Operasional)
+        foreach ($laporanHarian as $data) {
+            $tglString = Carbon::parse($data->tanggal)->format('Y-m-d');
+            $opExpense = $pengeluaranOperasional[$tglString] ?? 0;
 
-    foreach ($reportData as $row) {
-        $labelTanggal[]    = \Carbon\Carbon::parse($row->tanggal)->translatedFormat('d M');
-        $dataPendapatan[]  = (int) $row->total_pendapatan;
-        $dataPengeluaran[] = (int) $row->total_pengeluaran;
+            $labelTanggal[] = Carbon::parse($data->tanggal)->format('d M');
+            $dataPendapatan[] = $data->total_pendapatan;
+            $dataPengeluaran[] = $opExpense;
+
+            $totalSemuaPendapatan += $data->total_pendapatan;
+            $totalSemuaTransaksi += $data->jumlah_transaksi;
+        }
+
+        // Hitung total pengeluaran keseluruhan (modal + operasional)
+        $totalSemuaPengeluaran = $pengeluaranOperasional->sum();
+
+        // 5. Hitung Pendapatan Bersih Real (Pendapatan - (Modal + Operasional))
+        $totalPendapatanBersih = $totalSemuaPendapatan - $totalSemuaPengeluaran;
+
+        // 6. Data Metode Pembayaran (Chart Donut)
+        $metodePembayaran = DB::table('transactions')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->where('status', 'Lunas')
+            ->select('metode_pembayaran', DB::raw('COUNT(id_transaksi) as total'))
+            ->groupBy('metode_pembayaran')
+            ->get();
+
+        $labelMetode = $metodePembayaran->pluck('metode_pembayaran')->toArray();
+        $dataMetode = $metodePembayaran->pluck('total')->toArray();
+
+        return view('report.index', compact(
+            'laporanHarian', 'labelTanggal', 'dataPendapatan', 'dataPengeluaran',
+            'totalSemuaPendapatan', 'totalSemuaTransaksi', 'totalPendapatanBersih',
+            'labelMetode', 'dataMetode'
+        ));
     }
 
     return view('report.index', compact(
@@ -71,9 +98,7 @@ class ReportController extends Controller
 
     public function print()
     {
-        $businessId = auth()->user()->business_id;
-
-        // PERBAIKAN: Menghapus filter status lunas yang merusak query SQL
+        // Sesuaikan jika diperlukan
         $laporanHarian = DB::table('transactions')
             ->join('transaction_details', 'transactions.id_transaksi', '=', 'transaction_details.transaksi_id')
             ->join('products', 'transaction_details.produk_id', '=', 'products.id_produk')
@@ -88,7 +113,6 @@ class ReportController extends Controller
             ->get();
 
         $totalPendapatan = $laporanHarian->sum('total_pendapatan');
-
         return view('report.print', compact('laporanHarian', 'totalPendapatan'));
     }
 }

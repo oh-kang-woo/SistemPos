@@ -8,9 +8,20 @@ use App\Models\ExpenseCategory;
 
 class ExpenseController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pengeluaran = Expense::with('category')->orderBy('tanggal', 'desc')->get();
+        // Menggunakan Query Builder untuk fitur Pencarian & Filter
+        $query = Expense::with('category')->orderBy('tanggal', 'desc');
+
+        if ($request->filled('kategori')) {
+            $query->where('expense_category_id', $request->kategori);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('deskripsi', 'like', '%' . $request->search . '%');
+        }
+
+        $pengeluaran = $query->get();
         $kategori = ExpenseCategory::where('status_aktif', true)->get();
 
         $totalPengeluaran = $pengeluaran->sum('nominal');
@@ -35,10 +46,36 @@ class ExpenseController extends Controller
             'tanggal' => 'required|date',
             'expense_category_id' => 'required|exists:expense_categories,id',
             'nominal' => 'required|numeric|min:0',
-            // tambahkan validasi lampiran jika perlu
         ]);
 
         Expense::create($request->all());
         return back()->with('success', 'Pengeluaran berhasil dicatat!');
+    }
+
+    // --- FUNGSI BARU UNTUK EDIT & HAPUS ---
+    public function updateExpense(Request $request, $id)
+    {
+        $expense = Expense::findOrFail($id);
+        $expense->update($request->all());
+        return back()->with('success', 'Data pengeluaran berhasil diubah!');
+    }
+
+    public function destroyExpense($id)
+    {
+        Expense::findOrFail($id)->delete();
+        return back()->with('success', 'Data pengeluaran berhasil dihapus!');
+    }
+
+    public function print(Request $request)
+    {
+        $query = Expense::with('category')->orderBy('tanggal', 'desc');
+        if ($request->filled('kategori')) $query->where('expense_category_id', $request->kategori);
+        if ($request->filled('search')) $query->where('deskripsi', 'like', '%' . $request->search . '%');
+
+        $pengeluaran = $query->get();
+        $totalPengeluaran = $pengeluaran->sum('nominal');
+
+        // Buatlah view baru 'expense.print' untuk tampilan cetak nanti
+        return view('expense.print', compact('pengeluaran', 'totalPengeluaran'));
     }
 }

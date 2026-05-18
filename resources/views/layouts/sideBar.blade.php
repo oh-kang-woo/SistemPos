@@ -1,13 +1,28 @@
-<aside class="sidebar">
+@php
 
-    <div class="sidebar-header">
-        <div class="header-brand">
-            <div class="logo-icon">
-                <i class="fas fa-shopping-cart"></i>
-            </div>
+    $globalSetting = \App\Models\Setting::first();
+@endphp
+
+        <aside class="sidebar">
+
+                <div class="sidebar-header">
+                    <div class="header-brand">
+                        @if($globalSetting && $globalSetting->logo_toko)
+                <div class="logo-img" style="margin-right: 12px; display: flex; align-items: center;">
+                    <img
+                        src="{{ asset($globalSetting->logo_toko) }}"
+                        alt="Logo Toko"
+                        style="height: 32px; width: 32px; object-fit: contain; border-radius: 4px;">
+                </div>
+            @else
+                <div class="logo-icon" style="display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+            @endif
+
             <div class="logo-text">
-                <h1>Pos System</h1>
-                <p>powered by Swiftfbill</p>
+                <h1>{{ $globalSetting->nama_toko ?? 'Pos System' }}</h1>
+                <p>Sistem kasir</p>
             </div>
         </div>
         <button class="toggle-btn">

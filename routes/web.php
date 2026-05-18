@@ -8,6 +8,7 @@ use App\Http\Controllers\CashierController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\SettingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,35 +60,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/transaksi/checkout', [TransactionController::class, 'checkout'])->name('transaksi.checkout');
     Route::get('/riwayat-transaksi/{id}/cetak', [TransactionController::class, 'print'])->name('transaction.print');
 
-    // Pengaturan Profil Pengguna
+    // Routes untuk laporan
+    Route::get('/laporan', [ReportController::class, 'index'])->name('report.index');
+    Route::get('/laporan/cetak', [ReportController::class, 'print'])->name('report.print');
+
+    // Routes untuk pengeluaran
+    Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('expense.index');
+    Route::post('/pengeluaran/kategori', [ExpenseController::class, 'storeCategory'])->name('pengeluaran.kategori.store');
+    Route::post('/pengeluaran', [ExpenseController::class, 'storeExpense'])->name('pengeluaran.store');
+    Route::put('/pengeluaran/{id}', [ExpenseController::class, 'updateExpense'])->name('pengeluaran.update');
+    Route::delete('/pengeluaran/{id}', [ExpenseController::class, 'destroyExpense'])->name('pengeluaran.destroy');
+    Route::get('/pengeluaran-print', [ExpenseController::class, 'print'])->name('pengeluaran.print');
+
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile.edit');
     Route::post('/profile', [AuthController::class, 'updateProfile'])->name('profile.update');
 
-
-    /*
-    |----------------------------------------------------------------------
-    | B. Akses Khusus (Hanya Manajer Toko, Karyawan Otomatis Terblokir/403)
-    |----------------------------------------------------------------------
-    */
-    Route::middleware('role:manajer')->group(function () {
-
-        // Manajemen Inventori Produk & Kategori Toko
-        Route::get('/produk', [ProductController::class, 'index'])->name('product.index');
-        Route::post('/produk', [ProductController::class, 'store'])->name('product.store');
-        Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-        Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
-        Route::post('/kategori', [CategoryController::class, 'store'])->name('category.store');
-        Route::delete('/kategori/{id}', [CategoryController::class, 'destroyCategory'])->name('category.destroy');
-
-        // Analitik & Laporan Keuangan Toko
-        Route::get('/laporan', [ReportController::class, 'index'])->name('report.index');
-        Route::get('/laporan/cetak', [ReportController::class, 'print'])->name('report.print');
-
-        // Pembukuan Pengeluaran Operasional Toko
-        Route::get('/pengeluaran', [ExpenseController::class, 'index'])->name('expense.index');
-        Route::post('/pengeluaran/kategori', [ExpenseController::class, 'storeCategory'])->name('pengeluaran.kategori.store');
-        Route::post('/pengeluaran', [ExpenseController::class, 'storeExpense'])->name('pengeluaran.store');
-
-    });
+    // Routes untuk pengaturan
+    Route::get('/pengaturan', [SettingController::class, 'index'])->name('setting.index');
+    Route::post('/pengaturan/profil', [SettingController::class, 'updateProfil'])->name('setting.updateProfil');
+    Route::post('/pengaturan/struk', [SettingController::class, 'updateStruk'])->name('setting.updateStruk');
+    Route::post('/pengaturan/user', [SettingController::class, 'storeUser'])->name('setting.storeUser')->middleware('auth');
 
 });
