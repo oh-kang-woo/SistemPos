@@ -133,3 +133,57 @@
     background-color: #3B4D66;
     color: #EF4444;
 }
+
+/* --- SIDEBAR MINIMIZE EFFECT (UPDATED) --- */
+
+/* Lebar default sidebar */
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ketika sidebar mengecil */
+.sidebar.minimized {
+    width: 80px;
+}
+
+/* Sembunyikan teks menu & sub-header saat mengecil */
+.sidebar.minimized .logo-text,
+.sidebar.minimized .menu-item span,
+.sidebar.minimized .menu-item-between .menu-item-left span,
+.sidebar.minimized .menu-item-between > i:last-child {
+    display: none !important;
+}
+
+/* Pusatkan ikon menu & header agar rapi saat mengecil */
+.sidebar.minimized .sidebar-header {
+    justify-content: center;
+    padding: 16px 0;
+}
+
+.sidebar.minimized .header-brand {
+    gap: 0;
+}
+
+.sidebar.minimized .menu-item {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+/* Mengatur jarak ikon di footer saat mengecil */
+.sidebar.minimized .menu-item-left {
+    justify-content: center;
+    width: 100%;
+    gap: 0;
+}
+
+/* Putar arah anak panah tombol toggle */
+.sidebar.minimized .toggle-btn i {
+    transform: rotate(180deg);
+}
+
+/* Supaya layout konten utama di sebelah kanan ikut bergeser mulus */
+.main-content {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}

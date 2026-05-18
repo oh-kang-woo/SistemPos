@@ -38,6 +38,8 @@
             flex: 1;
             overflow-y: auto;
             padding: 0 32px 32px 32px;
+            /* Memberikan transisi smooth saat sidebar mengecil/melebar */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
     </style>
 </head>
@@ -60,16 +62,41 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+
+        // ==========================================
+        // 1. LOGIKA SIDEBAR MINIMIZE (FITUR BARU)
+        // ==========================================
+        const sidebar = document.querySelector(".sidebar");
+        const toggleBtn = document.querySelector(".toggle-btn");
+
+        // Cek ingatan browser, jika sebelumnya di-minimize, tetapkan tetap kecil
+        if (localStorage.getItem("sidebar-state") === "minimized" && sidebar) {
+            sidebar.classList.add("minimized");
+        }
+
+        if (toggleBtn && sidebar) {
+            toggleBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("minimized");
+
+                // Simpan status ke memori browser agar tidak reset saat pindah halaman
+                if (sidebar.classList.contains("minimized")) {
+                    localStorage.setItem("sidebar-state", "minimized");
+                } else {
+                    localStorage.setItem("sidebar-state", "expanded");
+                }
+            });
+        }
+
+        // ==========================================
+        // 2. LOGIKA MODAL PEMBAYARAN
+        // ==========================================
         const modal = document.getElementById('modalPembayaran');
         const btnClose = document.getElementById('closeModalBtn');
 
-        // 1. LOGIKA TOMBOL SIMPAN (Menggunakan Event Delegation)
-        // Kita pantau semua klik di halaman...
+        // Logika Tombol Simpan (Menggunakan Event Delegation)
         document.addEventListener('click', function(e) {
-            // ...lalu kita cek apakah yang diklik itu tombol '.btn-save' atau icon di dalamnya
             const btnSimpan = e.target.closest('.btn-save');
 
-            // Jika benar yang diklik adalah area tombol Simpan
             if (btnSimpan) {
                 e.preventDefault();
 
@@ -81,14 +108,14 @@
             }
         });
 
-        // 2. LOGIKA TOMBOL CLOSE (Tanda Silang)
-        if (btnClose) {
+        // Logika Tombol Close Modal (Tanda Silang)
+        if (btnClose && modal) {
             btnClose.addEventListener('click', function() {
                 modal.classList.remove('active');
             });
         }
 
-        // 3. LOGIKA KLIK DI LUAR MODAL (Untuk menutup)
+        // Logika Klik di luar Modal untuk menutup
         window.addEventListener('click', function(event) {
             if (event.target === modal) {
                 modal.classList.remove('active');
