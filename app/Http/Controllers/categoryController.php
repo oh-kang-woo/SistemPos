@@ -45,7 +45,7 @@ class CategoryController extends Controller
         return redirect()->route('product.index')->with('success', 'Kategori berhasil ditambahkan.');
     }
 
-    public function destroyCategory($id)
+    public function destroy($id)
     {
         // Mencari kategori berdasarkan primary key khususmu yaitu 'id_kategori'
         $category = Category::where('id_kategori', $id)

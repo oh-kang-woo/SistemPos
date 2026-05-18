@@ -1,0 +1,365 @@
+/* --- Base Layout --- */
+.setting-container {
+    padding: 24px;
+    background-color: #f1f5f9;
+    min-height: 100vh;
+    transition: background-color 0.3s ease;
+}
+
+.setting-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.setting-header p {
+    margin: 4px 0 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.alert-success {
+    padding: 14px;
+    background-color: #dcfce7;
+    color: #15803d;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* --- Tabs --- */
+.tab-navigation {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.tab-btn.active {
+    background: #e2e8f0;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+.setting-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 800px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* --- Forms --- */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #334155;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    color: #334155;
+    background-color: #ffffff;
+}
+
+.form-control:focus {
+    border-color: #475569;
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1);
+}
+
+.flex-row {
+    display: flex;
+    gap: 16px;
+}
+
+.flex-child {
+    flex: 1;
+}
+
+/* --- Buttons --- */
+.btn-submit {
+    background: #1e293b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background: #334155;
+}
+
+.btn-outline {
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+    background: #f8fafc;
+}
+
+/* --- Toggle Switch --- */
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e1;
+    transition: .3s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+}
+
+input:checked + .slider {
+    background-color: #1e293b;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+.slider.round {
+    border-radius: 24px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* --- Table Styles --- */
+.table-responsive {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 16px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.custom-table th {
+    padding: 12px;
+    color: #475569;
+    background: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.custom-table td {
+    padding: 12px;
+    color: #1e293b;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.badge-role {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+/* --- Upload Box --- */
+.upload-dashed-box {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    background: #f8fafc;
+}
+
+/* --- Modal Base --- */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 23, 42, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content-box {
+    background-color: #ffffff;
+    width: 500px;
+    max-width: 90%;
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-body {
+    padding: 24px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 12px;
+    background: #f8fafc;
+}
+
+
+/* ==========================================================================
+   🌙 CONFIG MULTI-THEME (WHITE & DARK MODE)
+   ========================================================================== */
+
+/* --- TAMPILAN DEFAULT (WHITE / LIGHT MODE) --- */
+.setting-container { background-color: #f1f5f9; }
+.setting-header h2 { color: #1e293b; }
+.setting-header p { color: #64748b; }
+.setting-card { background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+.tab-navigation { border-color: #e2e8f0; }
+.tab-btn { color: #64748b; }
+.tab-btn.active { background: #e2e8f0; color: #1e293b; }
+.form-label { color: #334155; }
+
+/* === PERBAIKAN DI SINI: Memaksa input, textarea, dan select berwarna putih di White Mode === */
+.form-control,
+input.form-control,
+textarea.form-control,
+select.form-control {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #334155 !important;
+}
+
+.form-control:focus {
+    border-color: #475569 !important;
+    box-shadow: 0 0 0 3px rgba(71, 85, 105, 0.1) !important;
+}
+/* ========================================================================================= */
+
+.btn-submit { background: #1e293b; color: #ffffff; }
+.btn-submit:hover { background: #334155; }
+.btn-outline { background: #ffffff; border-color: #cbd5e1; color: #475569; }
+.btn-outline:hover { background: #f8fafc; }
+.switch-container { background: #f8fafc; }
+.table-responsive { background: #ffffff; border-color: #e2e8f0; }
+.custom-table th { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
+.custom-table td { color: #1e293b; border-color: #e2e8f0; }
+.badge-role { background: #e0f2fe; color: #0369a1; }
+.upload-dashed-box { background: #f8fafc; border-color: #cbd5e1; }
+.modal-content-box { background-color: #ffffff; }
+.modal-header { border-color: #e2e8f0; }
+.modal-footer { border-color: #e2e8f0; background: #f8fafc; }
+
+/* --- TAMPILAN JIKA AKTIF DARK MODE (.dark) --- */
+/* (Selektor ini otomatis menyesuaikan tombol "Mode Tampilan" di pojok kiri bawah sidebar-mu) */
+.dark .setting-container { background-color: #0f172a; }
+.dark .setting-container h3 { color: #0f172a; }
+.dark .setting-header h2 { color: #f8fafc; }
+.dark .setting-header h3 { color: #000000; }
+.dark .setting-header p { color: #94a3b8; }
+.dark .setting-card { background: #1e293b; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.2); }
+.dark .tab-navigation { border-color: #334155; }
+.dark .tab-btn { color: #94a3b8; }
+.dark .tab-btn.active { background: #334155; color: #f8fafc; }
+.dark .form-label { color: #cbd5e1; }
+.dark .form-control { background-color: #0f172a; border-color: #334155; color: #e2e8f0; }
+.dark .form-control:focus { border-color: #64748b; box-shadow: 0 0 0 3px rgba(226, 232, 240, 0.05); }
+.dark .btn-submit { background: #38bdf8; color: #0f172a; font-weight: 600; }
+.dark .btn-submit:hover { background: #7dd3fc; }
+.dark .btn-outline { background: #1e293b; border-color: #334155; color: #cbd5e1; }
+.dark .btn-outline:hover { background: #334155; }
+.dark .switch-container { background: #0f172a; }
+.dark input:checked + .slider { background-color: #38bdf8; }
+.dark .table-responsive { background: #1e293b; border-color: #334155; }
+.dark .custom-table th { background: #0f172a; color: #94a3b8; border-color: #334155; }
+.dark .custom-table td { color: #cbd5e1; border-color: #334155; }
+.dark .badge-role { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+.dark .upload-dashed-box { background: #0f172a; border-color: #334155; }
+.dark .modal-content-box { background: #1e293b; }
+.dark .modal-header, .dark .modal-footer { border-color: #334155; background: #0f172a; }

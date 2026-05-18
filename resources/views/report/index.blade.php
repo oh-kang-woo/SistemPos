@@ -54,7 +54,6 @@
     .summary-item .label { color: #64748b; font-size: 14px; margin-bottom: 8px;}
     .summary-item .value { font-size: 24px; font-weight: bold; color: #1e293b;}
 
-    /* Style untuk Tab */
     .tab-container { margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; display: flex; gap: 20px; }
     .tab-btn { background: none; border: none; padding: 10px 4px; font-size: 15px; font-weight: 500; color: #64748b; cursor: pointer; border-bottom: 2px solid transparent; }
     .tab-btn.active { color: #3b82f6; border-bottom-color: #3b82f6; }
@@ -62,7 +61,6 @@
     .view-section { display: none; background: #fff; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
     .view-section.active { display: block; }
 
-    /* Style Tabel */
     .classic-table { width: 100%; border-collapse: collapse; }
     .classic-table th, .classic-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid #e2e8f0; }
     .classic-table th { background-color: #f8fafc; color: #475569; font-weight: 600; font-size: 14px; }
@@ -92,6 +90,7 @@
         <div class="value" style="color: #8b5cf6;">{{ $totalSemuaTransaksi }} Trx</div>
     </div>
 </div>
+
 <div class="tab-container">
     <button class="tab-btn active" onclick="switchView('grafik', this)"><i class="fas fa-chart-line"></i> Tampilan Grafik</button>
     <button class="tab-btn" onclick="switchView('tabel', this)"><i class="fas fa-table"></i> Tampilan Tabel</button>
@@ -131,15 +130,6 @@
                 <th>Pendapatan Harian</th>
             </tr>
         </thead>
-        <div id="view-tabel" class="view-section">
-    <table class="classic-table">
-        <thead>
-            <tr>
-                <th>Tanggal</th>
-                <th>Jumlah Transaksi</th>
-                <th>Pendapatan Harian</th>
-            </tr>
-        </thead>
         <tbody>
             @forelse($reportData as $hari)
             <tr>
@@ -153,8 +143,6 @@
             </tr>
             @endforelse
         </tbody>
-    </table>
-</div>
     </table>
 </div>
 
@@ -173,7 +161,6 @@
     const labelMetode = {!! json_encode($labelMetode) !!};
     const dataMetode = {!! json_encode($dataMetode) !!};
 
-    // --- TAMBAHAN: Hitung Pendapatan Bersih Harian otomatis di Javascript ---
     const dataPendapatanBersih = dataPendapatan.map((pendapatanKotor, index) => {
         return pendapatanKotor - dataPengeluaran[index];
     });
@@ -186,7 +173,7 @@
             labels: labelTanggal,
             datasets: [
                 {
-                    label: 'Pendapatan Bersih', // Garis Hijau (Bersih)
+                    label: 'Pendapatan Bersih',
                     data: dataPendapatanBersih,
                     borderColor: '#10b981',
                     backgroundColor: 'rgba(16, 185, 129, 0.1)',
@@ -199,7 +186,7 @@
                     tension: 0.4
                 },
                 {
-                    label: 'Pendapatan Kotor', // Garis Biru Gelap (Kotor)
+                    label: 'Pendapatan Kotor',
                     data: dataPendapatan,
                     borderColor: '#1e293b',
                     backgroundColor: 'rgba(30, 41, 59, 0.05)',
@@ -217,10 +204,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: true, // Diaktifkan agar terlihat mana garis kotor & bersih
-                    position: 'top'
-                }
+                legend: { display: true, position: 'top' }
             },
             scales: {
                 y: {
@@ -233,7 +217,7 @@
         }
     });
 
-    // --- GRAFIK DONUT (METODE PEMBAYARAN) ---
+    // --- PERBAIKAN GRAFIK DONUT (METODE PEMBAYARAN) ---
     const ctxMetode = document.getElementById('metodeChart').getContext('2d');
     new Chart(ctxMetode, {
         type: 'doughnut',
@@ -241,8 +225,10 @@
             labels: labelMetode,
             datasets: [{
                 data: dataMetode,
-                backgroundColor: ['#cbd5e1', '#64748b', '#334155'],
-                borderWidth: 0,
+                // PERBAIKAN: Mengganti warna abu-abu ke warna cerah dinamis
+                backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6', '#f59e0b'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
             }]
         },
         options: {
@@ -283,10 +269,7 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: {
-                    display: true, // Diaktifkan juga untuk kejelasan
-                    position: 'top'
-                }
+                legend: { display: true, position: 'top' }
             },
             scales: {
                 y: {

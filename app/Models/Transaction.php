@@ -9,22 +9,13 @@ class Transaction extends Model
 {
     use HasFactory;
 
-    // Tentukan primary key asli sesuai migrasi kamu
     protected $primaryKey = 'id_transaksi';
 
-    // Daftarkan kolom yang boleh diisi (mass assignable)
-    protected $fillable = [
-        'business_id',
-        'user_id',
-        'nomor_invoice',
-        'total_harga',
-        'bayar',
-        'kembali',
-    ];
+    // Menggunakan guarded kosong agar semua inputan dinamis (termasuk kolom nama_pelanggan & metode_pembayaran) tidak diblokir Laravel
+    protected $guarded = [];
 
     /**
      * Relasi ke model User (Kasir yang membuat transaksi)
-     * Menghubungkan user_id di tabel transactions ke id di tabel users
      */
     public function user()
     {
@@ -33,7 +24,6 @@ class Transaction extends Model
 
     /**
      * Relasi ke model TransactionDetail (Isi barang belanjaan)
-     * Menghubungkan id_transaksi ke transaksi_id di tabel detail
      */
     public function details()
     {

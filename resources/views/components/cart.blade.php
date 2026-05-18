@@ -39,13 +39,13 @@
         <div style="background: #eef2f6; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
             <p style="font-size: 14px; color: #475569; margin-top: 0; margin-bottom: 10px;">Metode pembayaran:</p>
             <div style="display: flex; gap: 10px;">
-                <button style="flex: 1; padding: 8px; border: 1px solid #2563eb; background: white; border-radius: 6px; font-weight: bold; color: #2563eb; font-size: 13px;">
+                <button type="button" id="btn-method-tunai" onclick="selectMethod('Tunai')" style="flex: 1; padding: 8px; border: 1px solid #2563eb; background: #2563eb; border-radius: 6px; font-weight: bold; color: white; font-size: 13px; cursor: pointer;">
                     <i class="fas fa-money-bill-wave" style="margin-right: 4px;"></i> Tunai
                 </button>
-                <button style="flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; font-weight: bold; color: #64748b; font-size: 13px;">
+                <button type="button" id="btn-method-qris" onclick="selectMethod('QRIS')" style="flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; font-weight: bold; color: #64748b; font-size: 13px; cursor: pointer;">
                     <i class="fas fa-qrcode" style="margin-right: 4px;"></i> QRIS
                 </button>
-                <button style="flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; font-weight: bold; color: #64748b; font-size: 13px;">
+                <button type="button" id="btn-method-debit" onclick="selectMethod('Debit')" style="flex: 1; padding: 8px; border: 1px solid #cbd5e1; background: white; border-radius: 6px; font-weight: bold; color: #64748b; font-size: 13px; cursor: pointer;">
                     <i class="fas fa-credit-card" style="margin-right: 4px;"></i> Debit
                 </button>
             </div>
@@ -63,55 +63,72 @@
             <input type="text" id="input-nama-pelanggan" placeholder="Contoh: arip" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px;">
         </div>
 
-
        {{-- Tombol Aksi Bawah --}}
         <div style="margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px;">
-            <button id="btn-bayar-modal" style="width: 100%; padding: 14px; border: none; background: #1e293b; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
+            <button type="button" onclick="showModalPembayaran()()" style="width: 100%; padding: 14px; border: none; background: #1e293b; color: white; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px;">
                 Bayar Sekarang
             </button>
 
-            {{-- Tombol Hapus Keranjang Baru --}}
-            <button onclick="clearCart()" style="width: 100%; padding: 12px; border: 1px solid #ef4444; background: #fef2f2; color: #ef4444; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
+            <button type="button" onclick="clearCart()" style="width: 100%; padding: 12px; border: 1px solid #ef4444; background: #fef2f2; color: #ef4444; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px;">
                 <i class="fas fa-trash-alt" style="margin-right: 6px;"></i> Hapus Keranjang
             </button>
         </div>
     </div>
 </div>
 
-{{-- Script Gabungan SUPER LENGKAP --}}
-<script>
-    // --- 1. Inisialisasi Data Keranjang (Global) ---
-    let cart = [];
+{{-- INCLUDE FILE MODAL EKSTERNAL KAMU DISINI --}}
+@include('components.modalpembayaran')
 
-    // --- FUNGSI UPDATE: Menambahkan parameter ID ---
+<script>
+    let cart = [];
+    let selectedPaymentMethod = 'Tunai';
+
+    window.selectMethod = function(method) {
+        selectedPaymentMethod = method;
+        const buttons = {
+            'Tunai': document.getElementById('btn-method-tunai'),
+            'QRIS': document.getElementById('btn-method-qris'),
+            'Debit': document.getElementById('btn-method-debit')
+        };
+
+        Object.keys(buttons).forEach(key => {
+            if (buttons[key]) {
+                buttons[key].style.border = '1px solid #cbd5e1';
+                buttons[key].style.background = 'white';
+                buttons[key].style.color = '#64748b';
+            }
+        });
+
+        if (buttons[method]) {
+            buttons[method].style.border = '1px solid #2563eb';
+            buttons[method].style.background = '#2563eb';
+            buttons[method].style.color = 'white';
+        }
+
+        let totalBelanja = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        if ((method === 'QRIS' || method === 'Debit') && totalBelanja > 0) {
+            document.getElementById('input-jumlah-bayar').value = 'Rp ' + totalBelanja.toLocaleString('id-ID');
+        } else if (method === 'Tunai') {
+            document.getElementById('input-jumlah-bayar').value = '';
+        }
+    };
+
     window.addToCart = function(id, name, price) {
-        // Membersihkan harga dari format string
         let cleanPrice = typeof price === 'string' ? parseInt(price.replace(/[^0-9]/g, '')) : price;
         if (isNaN(cleanPrice)) cleanPrice = 0;
 
-        // Cek apakah item sudah ada di dalam keranjang BERDASARKAN ID
         const existingItemIndex = cart.findIndex(item => item.id === id);
-
         if (existingItemIndex !== -1) {
-            cart[existingItemIndex].qty += 1; // Tambah jumlah jika sudah ada
+            cart[existingItemIndex].qty += 1;
         } else {
-            // Jika belum ada, buat baris item baru dengan menyimpan ID-nya
-            cart.push({
-                id: id,
-                name: name,
-                price: cleanPrice,
-                qty: 1
-            });
+            cart.push({ id: id, name: name, price: cleanPrice, qty: 1 });
         }
-        renderCart(); // Perbarui tampilan
+        renderCart();
     };
 
-    // --- 2. Fungsi Global Interaksi Keranjang ---
     window.updateQty = function(index, change) {
         cart[index].qty += change;
-        if (cart[index].qty <= 0) {
-            cart.splice(index, 1);
-        }
+        if (cart[index].qty <= 0) cart.splice(index, 1);
         renderCart();
     };
 
@@ -169,25 +186,68 @@
                         <i class="fas fa-trash-alt" style="font-size: 14px;"></i>
                     </button>
                 </div>
-            </div>
-            `;
+            </div>`;
         });
 
         container.innerHTML = html;
         if(subtotalEl) subtotalEl.innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
         if(grandTotalEl) grandTotalEl.innerText = 'Rp ' + subtotal.toLocaleString('id-ID');
         if(totalItemsBadge) totalItemsBadge.innerText = totalItemsCount + ' Item';
+
+        if (selectedPaymentMethod === 'QRIS' || selectedPaymentMethod === 'Debit') {
+            document.getElementById('input-jumlah-bayar').value = 'Rp ' + subtotal.toLocaleString('id-ID');
+        }
     };
 
-    // --- 3. Event Listener Utama ---
+    // --- FUNGSI BARU: Mengisi data ke modal eksternal & menampilkannya ---
+    window.openPaymentModal = function() {
+        if (cart.length === 0) {
+            alert('Keranjang belanja masih kosong!');
+            return;
+        }
+
+        let totalPembayaran = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        let inputBayarVal = document.getElementById('input-jumlah-bayar').value;
+        let uangDiterima = parseInt(inputBayarVal.replace(/[^0-9]/g, '')) || 0;
+
+        if (selectedPaymentMethod !== 'Tunai') {
+            uangDiterima = totalPembayaran;
+        }
+
+        if (uangDiterima < totalPembayaran) {
+            alert('Uang yang dibayarkan kurang!');
+            return;
+        }
+
+        let uangKembali = uangDiterima - totalPembayaran;
+        let namaPelanggan = document.getElementById('input-nama-pelanggan').value || 'Tanpa Nama';
+
+        // Mengisi ID di dalam file modalpembayaran.blade.php
+        if (document.getElementById('modal-info-pelanggan')) document.getElementById('modal-info-pelanggan').innerText = namaPelanggan;
+        if (document.getElementById('modal-info-metode')) document.getElementById('modal-info-metode').innerText = selectedPaymentMethod;
+        if (document.getElementById('modal-info-total')) document.getElementById('modal-info-total').innerText = 'Rp ' + totalPembayaran.toLocaleString('id-ID');
+        if (document.getElementById('modal-info-bayar')) document.getElementById('modal-info-bayar').innerText = 'Rp ' + uangDiterima.toLocaleString('id-ID');
+        if (document.getElementById('modal-info-kembali')) document.getElementById('modal-info-kembali').innerText = 'Rp ' + uangKembali.toLocaleString('id-ID');
+
+        // Memanggil fungsi show modal dari modalpembayaran.blade.php
+        if (typeof window.showModalPembayaran === 'function') {
+            window.showModalPembayaran();
+        } else {
+            // Fallback jika container modal menggunakan ID standar wrapper luar
+            const targetModal = document.getElementById('modal-pembayaran-wrapper') || document.getElementById('modal-pembayaran');
+            if (targetModal) targetModal.style.display = 'flex';
+        }
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         renderCart();
 
-        // 3A. Script Format Rupiah
         const inputBayar = document.getElementById('input-jumlah-bayar');
         if (inputBayar) {
             inputBayar.addEventListener('keyup', function(e) {
-                this.value = formatRupiah(this.value, 'Rp ');
+                if(selectedPaymentMethod === 'Tunai') {
+                    this.value = formatRupiah(this.value, 'Rp ');
+                }
             });
         }
 
@@ -204,74 +264,6 @@
             }
             rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
             return prefix == undefined ? rupiah : (rupiah ? 'Rp ' + rupiah : '');
-        }
-
-        // 3B. Script Tampilkan Popup Modal
-        const btnBayarModal = document.getElementById('btn-bayar-modal');
-        if (btnBayarModal) {
-            btnBayarModal.addEventListener('click', function(e) {
-                e.preventDefault();
-
-                // Cek apakah keranjang kosong
-                if (typeof cart === 'undefined' || cart.length === 0) {
-                    alert('Keranjang belanja masih kosong! Silakan pilih produk terlebih dahulu.');
-                    return;
-                }
-
-                // Siapkan data untuk ditampilkan di modal
-                prepareModalData();
-
-                // Tampilkan modal
-                const paymentModal = document.getElementById('modalPembayaran');
-                if (paymentModal) paymentModal.style.display = 'flex';
-            });
-        }
-
-        function prepareModalData() {
-            const modalItemsContainer = document.getElementById('modal-items-container');
-            const modalGrandTotal = document.getElementById('modal-grand-total');
-            const modalCashGiven = document.getElementById('modal-cash-given');
-            const modalChange = document.getElementById('modal-change');
-            const modalCustomerName = document.getElementById('modal-customer-name');
-
-            let totalBelanja = 0;
-            let itemsHtml = '';
-
-            cart.forEach(item => {
-                const subtotalItem = item.price * item.qty;
-                totalBelanja += subtotalItem;
-                itemsHtml += `
-                    <div class="t-item" style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px;">
-                        <div>
-                            <span class="t-name" style="font-weight: 600; display: block; color: #1e293b;">${item.name}</span>
-                            <span class="t-calc" style="color: #64748b; font-size: 12px;">Rp ${item.price.toLocaleString('id-ID')} X ${item.qty}</span>
-                        </div>
-                        <span class="t-price" style="font-weight: bold; color: #1e293b;">Rp ${subtotalItem.toLocaleString('id-ID')}</span>
-                    </div>
-                `;
-            });
-
-            if (modalItemsContainer) modalItemsContainer.innerHTML = itemsHtml;
-            if (modalGrandTotal) modalGrandTotal.innerText = 'Rp ' + totalBelanja.toLocaleString('id-ID');
-
-            const inputBayarVal = document.getElementById('input-jumlah-bayar') ? document.getElementById('input-jumlah-bayar').value : "0";
-            const cashGiven = parseInt(inputBayarVal.replace(/[^0-9]/g, '')) || 0;
-            const kembalian = cashGiven - totalBelanja;
-
-            if (modalCashGiven) modalCashGiven.innerText = 'Rp ' + cashGiven.toLocaleString('id-ID');
-            if (modalChange) {
-                if (kembalian >= 0) {
-                    modalChange.innerText = 'Rp ' + kembalian.toLocaleString('id-ID');
-                    modalChange.style.color = '#10b981';
-                } else {
-                    modalChange.innerText = 'Uang Kurang (Rp ' + Math.abs(kembalian).toLocaleString('id-ID') + ')';
-                    modalChange.style.color = '#ef4444';
-                }
-            }
-
-            const inputNama = document.getElementById('input-nama-pelanggan');
-            const inputNamaVal = inputNama ? inputNama.value : "";
-            if (modalCustomerName) modalCustomerName.innerText = inputNamaVal.trim() === '' ? 'Tanpa Nama' : inputNamaVal;
         }
     });
 </script>

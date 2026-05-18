@@ -22,7 +22,7 @@
 
             <div class="logo-text">
                 <h1>{{ $globalSetting->nama_toko ?? 'Pos System' }}</h1>
-                <p>Sistem kasir</p>
+                <p>Powered by Swiftbill</p>
             </div>
         </div>
         <button class="toggle-btn">

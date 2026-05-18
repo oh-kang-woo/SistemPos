@@ -12,20 +12,16 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        // 1. Ambil business_id dari user yang sedang login
         $businessId = auth()->user()->business_id;
 
-        // 2. Ambil data transaksi toko ini beserta relasi detail dan data user/kasir
         $transactions = Transaction::where('business_id', $businessId)
                                     ->with(['details', 'user'])
                                     ->orderBy('created_at', 'desc')
                                     ->get();
 
-        // 3. Hitung data untuk Kartu Ringkasan
         $totalTransaksi = $transactions->count();
-        $totalPenjualan = $transactions->sum('total_harga'); // Sesuai kolom database
+        $totalPenjualan = $transactions->sum('total_harga');
 
-        // 4. Hitung Laba Kotor dari detail transaksi toko ini
         $labaKotor = 0;
 
         $semuaDetail = TransactionDetail::whereHas('transaction', function ($query) use ($businessId) {
@@ -37,7 +33,8 @@ class TransactionController extends Controller
                              ->where('business_id', $businessId)
                              ->first();
 
-            $hargaModal = $produk ? $produk->harga_beli : 0;
+            // Pengaman kalkulasi: Jika produk sempat dihapus kasir, hitung estimasi modal agar laba tidak minus menor
+            $hargaModal = $produk ? $produk->harga_beli : ($detail->harga_satuan * 0.7);
             $totalModalItem = $hargaModal * $detail->jumlah;
 
             $labaKotor += ($detail->subtotal - $totalModalItem);
@@ -53,17 +50,17 @@ class TransactionController extends Controller
         DB::beginTransaction();
 
         try {
-            // 1. Simpan data ke tabel transactions sesuai dengan struktur migrasi asli
             $transaksi = new Transaction();
-            $transaksi->business_id   = $businessId;
-            $transaksi->nomor_invoice = 'TRX-' . $businessId . '-' . time();
-            $transaksi->user_id       = auth()->id();
-            $transaksi->total_harga   = $request->total_pembayaran; // Diambil dari input form kasir
-            $transaksi->bayar         = $request->uang_diterima;    // Diambil dari input form kasir
-            $transaksi->kembali       = $request->uang_kembali;      // Diambil dari input form kasir
+            $transaksi->business_id       = $businessId;
+            $transaksi->nomor_invoice     = 'TRX-' . $businessId . '-' . time();
+            $transaksi->user_id           = auth()->id();
+            $transaksi->total_harga       = $request->total_pembayaran;
+            $transaksi->bayar             = $request->uang_diterima;
+            $transaksi->kembali           = $request->uang_kembali;
+            $transaksi->metode_pembayaran = $request->input('metode_pembayaran', 'Tunai');
+            $transaksi->nama_pelanggan    = $request->input('nama_pelanggan', 'Tanpa Nama');
             $transaksi->save();
 
-            // 2. Loop data keranjang dari request AJAX
             foreach ($request->cart as $item) {
                 $produk = Product::where('id_produk', $item['id'])
                                  ->where('business_id', $businessId)
@@ -73,9 +70,8 @@ class TransactionController extends Controller
                     throw new \Exception("Stok untuk produk " . $item['name'] . " tidak mencukupi.");
                 }
 
-                // Simpan data ke tabel transaction_details
                 $detail = new TransactionDetail();
-                $detail->transaksi_id = $transaksi->id_transaksi; // Primary key dari tabel transaksi asli
+                $detail->transaksi_id = $transaksi->id_transaksi;
                 $detail->produk_id    = $item['id'];
                 $detail->nama_produk  = $item['name'];
                 $detail->harga_satuan = $item['price'];
@@ -83,7 +79,6 @@ class TransactionController extends Controller
                 $detail->subtotal     = $item['price'] * $item['qty'];
                 $detail->save();
 
-                // 3. Kurangi stok produk
                 $produk->decrement('jumlah_stok', $item['qty']);
             }
 

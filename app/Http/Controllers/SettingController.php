@@ -51,6 +51,16 @@ class SettingController extends Controller
 
         $setting->update($data);
 
+        // === KOREKSI: Mengembalikan response JSON untuk AJAX termasuk data alamat ===
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Profil toko berhasil diperbarui!',
+                'nama_toko' => $setting->nama_toko,
+                'alamat_lengkap' => $setting->alamat_lengkap
+            ]);
+        }
+
         return redirect()->back()->with('success', 'Profil toko berhasil diperbarui!');
     }
 

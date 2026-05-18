@@ -141,7 +141,6 @@
         background-color: #f9fafb;
     }
 
-    /* Text Colors & Badges */
     .text-danger {
         color: #ef4444 !important;
         font-weight: 600;
@@ -188,66 +187,15 @@
         color: #6b7280;
     }
 
-    /* Reset & Container */
-    .product-wrapper { padding: 24px 32px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .header-title { font-size: 24px; font-weight: bold; color: #111827; margin: 0 0 4px 0; }
-    .header-subtitle { font-size: 14px; color: #6b7280; margin: 0; }
-    .header-actions { display: flex; gap: 12px; }
-
-    /* Buttons */
-    .btn { display: flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500; cursor: pointer; border: none; transition: 0.2s; }
-    .btn-outline { background-color: #ffffff; border: 1px solid #d1d5db; color: #374151; }
-    .btn-outline:hover { background-color: #f9fafb; }
-    .btn-primary { background-color: #2d3748; color: #ffffff; }
-    .btn-primary:hover { background-color: #1a202c; }
-
-    /* Alert Box Kritis */
-    .alert-box { background-color: #fffbeb; border: 1px solid #fde68a; padding: 16px; border-radius: 8px; display: flex; align-items: center; margin-bottom: 24px; }
-    .alert-icon { color: #d97706; font-size: 18px; margin-right: 12px; }
-    .alert-text { font-size: 14px; color: #92400e; }
-
-    /* Alert Box Sukses (Baru ditambahkan) */
     .alert-success { background-color: #ecfdf5; border: 1px solid #a7f3d0; padding: 16px; border-radius: 8px; display: flex; align-items: center; margin-bottom: 24px; }
     .alert-success i { color: #059669; font-size: 18px; margin-right: 12px; }
     .alert-success span { font-size: 14px; color: #065f46; font-weight: 500; }
 
-    /* Card & Toolbar */
-    .data-card { background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; }
-    .card-toolbar { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
-    .filter-select, .search-input { padding: 10px 16px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; color: #374151; outline: none; }
-    .filter-select { min-width: 200px; background-color: white; }
-    .search-wrapper { position: relative; width: 300px; }
-    .search-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
-    .search-input { width: 100%; padding-left: 38px; box-sizing: border-box; }
-
-    /* Table Styling */
-    .table-responsive { width: 100%; overflow-x: auto; }
-    .data-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .data-table th { padding: 16px 20px; font-size: 12px; font-weight: 700; color: #111827; border-bottom: 1px solid #e5e7eb; }
-    .data-table td { padding: 16px 20px; font-size: 14px; color: #4b5563; border-bottom: 1px solid #f3f4f6; }
-    .data-table tr:hover td { background-color: #f9fafb; }
-
-    .text-danger { color: #ef4444 !important; font-weight: 600; }
-    .badge { padding: 4px 16px; border-radius: 999px; font-size: 12px; font-weight: 500; display: inline-block; }
-    .badge-active { background-color: #475569; color: #ffffff; }
-    .badge-inactive { background-color: #e5e7eb; color: #4b5563; }
-
-    /* Action Buttons */
-    .action-cell { display: flex; justify-content: center; gap: 16px; }
-    .action-btn { background: none; border: none; cursor: pointer; font-size: 16px; padding: 4px; }
-    .action-edit { color: #6b7280; }
-    .action-edit:hover { color: #2563eb; }
-    .action-delete { color: #ef4444; }
-    .action-delete:hover { color: #b91c1c; }
-
-    .card-footer { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #6b7280; }
-
-    /* --- MODAL STYLING (BARU) --- */
+    /* --- MODAL STYLING --- */
     .modal-overlay {
         position: fixed; top: 0; left: 0; right: 0; bottom: 0;
         background-color: rgba(0, 0, 0, 0.5);
-        display: none; /* Disembunyikan secara default */
+        display: none;
         justify-content: center; align-items: center;
         z-index: 1000;
     }
@@ -275,18 +223,13 @@
     .form-group { margin-bottom: 16px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
-    .form-label span { color: #ef4444; } /* Tanda bintang merah */
+    .form-label span { color: #ef4444; }
     .form-control {
         width: 100%; padding: 10px 12px; border: 1px solid #d1d5db;
         border-radius: 6px; font-size: 14px; box-sizing: border-box;
         font-family: inherit;
     }
     .form-control:focus { outline: none; border-color: #2563eb; }
-    .image-upload-box {
-        border: 2px dashed #d1d5db; padding: 24px; text-align: center;
-        border-radius: 8px; cursor: pointer; color: #6b7280; font-size: 13px;
-    }
-    .image-upload-box:hover { border-color: #9ca3af; background-color: #f9fafb; }
 </style>
 
 <div class="product-wrapper">
@@ -357,9 +300,7 @@
                     @forelse($products as $p)
                     <tr>
                         <td style="font-weight: 600; color: #111827;">{{ $p->kode_produk }}</td>
-                        <td>
-                            {{ $p->nama_produk }}
-                        </td>
+                        <td>{{ $p->nama_produk }}</td>
                         <td>{{ $p->category ? $p->category->nama_kategori : '-' }}</td>
                         <td>{{ $p->satuan }}</td>
                         <td>Rp {{ number_format($p->harga_beli, 0, ',', '.') }}</td>
@@ -380,7 +321,8 @@
                                     data-hargajual="{{ $p->harga_jual }}"
                                     data-stok="{{ $p->jumlah_stok }}"
                                     data-minstok="{{ $p->min_stok }}"
-                                    data-status="{{ strtolower($p->status) }}">
+                                    data-status="{{ strtolower($p->status) }}"
+                                    data-route="{{ route('product.update', $p->id_produk ?? $p->id) }}">
                                     <i class="fas fa-pen"></i>
                                 </button>
                                 <form action="{{ route('product.destroy', $p->id_produk ?? $p->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus barang ini? Data yang dihapus tidak bisa dikembalikan.');">
@@ -439,26 +381,27 @@
 </div>
 
 <div id="modalKelolaCategory" class="modal-overlay">
-<div class="modal-content">
-    <div class="modal-header">
-        <h3>Kelola Kategori</h3>
-        <button class="close-btn" onclick="closeModal('modalCategory')">×</button>
-    </div>
-
-    <label style="font-size: 13px; color: #475569; font-weight: 500; display: block; margin-left: 10px; margin-bottom: 10px;">Daftar Kategori Tersedia</label>
-    <div style="max-height: 200px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
-        @foreach($categories as $category)
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #e2e8f0;">
-            <span style="font-size: 14px; color: #1e293b;">{{ $category->nama_kategori }}</span>
-            <form action="{{ route('category.destroy', $category->id_kategori) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua barang yang terkait dengan kategori ini juga akan terhapus.');">
-                @csrf
-                @method('DELETE')
-                <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px;">🗑️ Hapus</button>
-            </form>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Kelola Kategori</h3>
+            <button class="close-btn" onclick="closeModal('modalKelolaCategory')">×</button>
         </div>
-        @endforeach
+        <div class="modal-body">
+            <label style="font-size: 13px; color: #475569; font-weight: 500; display: block; margin-bottom: 10px;">Daftar Kategori Tersedia</label>
+            <div style="max-height: 200px; overflow-y: auto; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                @foreach($categories as $category)
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid #e2e8f0;">
+                    <span style="font-size: 14px; color: #1e293b;">{{ $category->nama_kategori }}</span>
+                    <form action="{{ route('category.destroy', $category->id_kategori) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini? Semua barang yang terkait dengan kategori ini juga akan terhapus.');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 14px;">🗑️ Hapus</button>
+                    </form>
+                </div>
+                @endforeach
+            </div>
+        </div>
     </div>
-</div>
 </div>
 
 <div id="modalProduct" class="modal-overlay">
@@ -546,7 +489,6 @@
     </div>
 </div>
 
-
 <div id="modalEditProduct" class="modal-overlay">
     <div class="modal-content large">
         <div class="modal-header">
@@ -633,7 +575,6 @@
 </div>
 
 <script>
-    // Fungsi standar buka-tutup modal dasar
     function openModal(id) {
         document.getElementById(id).style.display = 'flex';
     }
@@ -641,7 +582,6 @@
         document.getElementById(id).style.display = 'none';
     }
 
-    // Fungsi khusus inject data ke modal edit saat tombol icon pen diklik
     function openEditModal(button) {
         const id = button.getAttribute('data-id');
         const kode = button.getAttribute('data-kode');
@@ -653,8 +593,8 @@
         const stok = button.getAttribute('data-stok');
         const minstok = button.getAttribute('data-minstok');
         const status = button.getAttribute('data-status');
+        const routeUrl = button.getAttribute('data-route');
 
-        // Isi values ke dalam form modal edit
         document.getElementById('edit_nama_produk').value = nama;
         document.getElementById('edit_kode_produk').value = kode;
         document.getElementById('edit_kategori_id').value = kategori;
@@ -665,12 +605,11 @@
         document.getElementById('edit_min_stok').value = minstok;
         document.getElementById('edit_status').value = status;
 
-        // Set action form secara dinamis mengarah ke Rute PUT /product/{id}
-        document.getElementById('formEditProduct').action = `/product/${id}`;
+        // Pasang rute aksi update dinamis dari Laravel
+        document.getElementById('formEditProduct').action = routeUrl;
 
-        // Tampilkan modal edit
         openModal('modalEditProduct');
     }
 </script>
 
-@endsection
+@endsection 
