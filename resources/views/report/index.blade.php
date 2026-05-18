@@ -131,8 +131,17 @@
                 <th>Pendapatan Harian</th>
             </tr>
         </thead>
+        <div id="view-tabel" class="view-section">
+    <table class="classic-table">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Jumlah Transaksi</th>
+                <th>Pendapatan Harian</th>
+            </tr>
+        </thead>
         <tbody>
-            @forelse($laporanHarian as $hari)
+            @forelse($reportData as $hari)
             <tr>
                 <td>{{ \Carbon\Carbon::parse($hari->tanggal)->translatedFormat('d F Y') }}</td>
                 <td>{{ $hari->jumlah_transaksi }} Transaksi</td>
@@ -140,10 +149,12 @@
             </tr>
             @empty
             <tr>
-                <td colspan="3" style="text-align: center; padding: 20px;">Belum ada data penjualan.</td>
+                <td colspan="3" style="text-align: center; padding: 20px;">Belum ada data penjualan pada periode ini.</td>
             </tr>
             @endforelse
         </tbody>
+    </table>
+</div>
     </table>
 </div>
 

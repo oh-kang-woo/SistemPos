@@ -18,15 +18,21 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-  protected $fillable = [
+    protected $fillable = [
+        'business_id', // Tambahkan ini
         'name',
         'email',
         'password',
-        'role',          // Tambahkan ini
-        'phone_number',  // Tambahkan ini
-        'profile_photo',  // Tambahkan ini
+        'role',
+        'phone_number',
+        'profile_photo',
     ];
 
+    // Relasi: User ini termasuk ke dalam bisnis/toko yang mana
+    public function business()
+    {
+        return $this->belongsTo(Business::class);
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

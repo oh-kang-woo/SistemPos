@@ -1,0 +1,363 @@
+/* public/css/register.css */
+
+/* --- 1. DEFINISI ANIMASI (KEYFRAMES) --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* --- 2. BASE STYLING --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: #fcfcfc;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    overflow-x: hidden;
+}
+
+.register-container {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 60px;
+}
+
+/* --- 3. PANEL KIRI --- */
+.left-panel {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    animation: fadeInLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (max-width: 991px) {
+    .left-panel { display: none; }
+}
+
+.hero-card {
+    background-size: cover;
+    background-position: center;
+    border-radius: 16px;
+    padding: 40px;
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.hero-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.hero-desc {
+    font-size: 14px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    max-width: 90%;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.feature-box {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    border-color: #cbd5e1;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.feature-box i {
+    font-size: 20px;
+    color: #1e293b;
+    margin-bottom: 12px;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.feature-box:hover i {
+    transform: scale(1.1);
+}
+
+.feature-box h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.feature-box p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+/* --- 4. PANEL KANAN / FORM CARD --- */
+.right-panel {
+    flex: 0.9;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 40px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both;
+}
+
+.form-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 4px;
+}
+
+.form-header p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-wrapper i.input-icon {
+    position: absolute;
+    left: 16px;
+    color: #64748b;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    pointer-events: none;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 12px 16px 12px 44px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #1e293b;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-wrapper input::placeholder {
+    color: #94a3b8;
+}
+
+.input-wrapper input:focus {
+    border-color: #1e293b;
+    box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.06);
+}
+
+.input-wrapper input:focus ~ i.input-icon {
+    color: #1e293b;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 14px;
+    transition: color 0.2s ease;
+    z-index: 5;
+}
+
+.toggle-password:hover {
+    color: #1e293b;
+}
+
+.terms-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.terms-wrapper input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.terms-wrapper label {
+    font-size: 12px;
+    color: #475569;
+    line-height: 1.5;
+}
+
+/* --- 5. TOMBOL & DIVIDER --- */
+.btn-submit {
+    width: 100%;
+    background: #192231;
+    color: #ffffff;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-submit:hover {
+    background: #0f172a;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(25, 34, 49, 0.15);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+    margin: 20px 0;
+}
+
+.divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.divider span {
+    padding: 0 12px;
+}
+
+.btn-google {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #1e293b;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-google:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    transform: translateY(-2px);
+}
+
+.btn-google:active {
+    transform: translateY(0);
+}
+
+.btn-google img {
+    width: 18px;
+    height: 18px;
+}
+
+.login-redirect {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.login-redirect a {
+    color: #1e293b;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.login-redirect a:hover {
+    color: #475569;
+}
+
+.error-box {
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #b91c1c;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    margin-bottom: 16px;
+}

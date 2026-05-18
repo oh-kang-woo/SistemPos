@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Business; // Letakkan di paling atas controller
 
 class AuthController extends Controller
 {
@@ -26,7 +27,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect()->intended('/kasir');
         }
 
         return back()->withErrors([
@@ -40,26 +41,36 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    // Memproses register
+
+
     public function register(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', 'min:8'],
+            'role' => ['required', 'string', 'in:manajer,karyawan'],
+            'business_name' => ['required', 'string', 'max:255'], // Validasi nama bisnis dari form html kamu
         ]);
 
+        // 1. Buat Bisnis/Toko Baru
+        $business = Business::create([
+            'name' => $request->business_name
+        ]);
+
+        // 2. Buat User Manajer yang dikunci ke Bisnis tersebut
         $user = User::create([
+            'business_id' => $business->id,
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role, // Berisi "manajer" sesuai input hidden form
         ]);
 
         Auth::login($user);
 
-        return redirect('/dashboard');
+        return redirect('/kasir');
     }
-
     // Memproses logout
     public function logout(Request $request)
     {

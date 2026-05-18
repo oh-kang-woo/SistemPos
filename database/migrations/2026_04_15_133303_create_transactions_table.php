@@ -9,18 +9,20 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+   public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('id_transaksi');
-            $table->string('no_transaksi')->unique();
-            $table->string('nama_kasir');
-            $table->integer('total_item');
-            $table->integer('total_pembayaran');
-            $table->integer('uang_diterima');
-            $table->integer('uang_kembali');
-            $table->string('metode_pembayaran');
-            $table->string('status')->default('lunas');
+
+            // --- MULTI-TENANT KEY ---
+            // Mengunci seluruh nota penjualan agar terkelompok per toko
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
+
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // ID kasir yang bertugas
+            $table->string('nomor_invoice')->unique();
+            $table->integer('total_harga');
+            $table->integer('bayar');
+            $table->integer('kembali');
             $table->timestamps();
         });
     }

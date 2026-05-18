@@ -22,13 +22,31 @@
     .cart-item-info p { margin: 0; font-size: 12px; color: #64748b; }
     .cart-item-price { font-weight: 700; color: #1e293b; font-size: 14px; }
 
-    /* KODE BARU: Menyembunyikan scrollbar tapi tetap bisa di-scroll */
+    /* Menyembunyikan scrollbar tapi tetap bisa di-scroll */
     .no-scrollbar::-webkit-scrollbar {
-        display: none; /* Chrome, Safari, Opera */
+        display: none;
     }
     .no-scrollbar {
-        -ms-overflow-style: none;  /* IE & Edge */
-        scrollbar-width: none;  /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* KODE BARU: Perataan Gambar Produk Kasir */
+    .product-image-container {
+        width: 100%;
+        height: 160px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        background-color: #f8fafc;
+        border-radius: 8px;
+    }
+    .product-image-container img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* atau pakai 'contain' sesuai selera */
+        object-position: center;
     }
 </style>
 
@@ -61,9 +79,7 @@
                     </span>
 
                     <div class="product-image-container">
-                        <img src="{{ $product->gambar_produk ? asset('images/' . $product->gambar_produk) : asset('images/default-product.png') }}"
-                            alt="{{ $product->nama_produk }}"
-                            class="product-image">
+                        <img src="{{ $product->gambar_produk ? asset('images/produk/' . $product->gambar_produk) : asset('images/produk/default.png') }}" alt="{{ $product->nama_produk }}">
                     </div>
 
                     <div class="product-info">

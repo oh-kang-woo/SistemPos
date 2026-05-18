@@ -550,29 +550,28 @@
 <div id="modalEditProduct" class="modal-overlay">
     <div class="modal-content large">
         <div class="modal-header">
-            <h3>Edit Barang</h3>
+            <h3>Edit Data Barang</h3>
             <button type="button" class="close-btn" onclick="closeModal('modalEditProduct')">&times;</button>
         </div>
-        <form id="editForm" method="POST" enctype="multipart/form-data">
+        <form id="formEditProduct" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="modal-body">
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Nama barang <span>*</span></label>
-                        <input type="text" name="nama_produk" id="edit_nama" class="form-control" required>
+                        <input type="text" name="nama_produk" id="edit_nama_produk" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Kode barang <span>*</span></label>
-                        <input type="text" name="kode_produk" id="edit_kode" class="form-control" required>
+                        <label class="form-label">Kode barang (Tidak dapat diubah)</label>
+                        <input type="text" id="edit_kode_produk" class="form-control" disabled style="background-color: #f3f4f6;">
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Kategori <span>*</span></label>
-                        <select name="kategori_id" id="edit_kategori" class="form-control" required>
-                            <option value="">Pilih kategori</option>
+                        <select name="kategori_id" id="edit_kategori_id" class="form-control" required>
                             @foreach($categories as $category)
                                 <option value="{{ $category->id_kategori }}">{{ $category->nama_kategori }}</option>
                             @endforeach
@@ -592,22 +591,22 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label class="form-label">Harga beli (Rp) <span>*</span></label>
-                        <input type="number" name="harga_beli" id="edit_hargabeli" class="form-control" required>
+                        <input type="number" name="harga_beli" id="edit_harga_beli" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Harga jual (Rp) <span>*</span></label>
-                        <input type="number" name="harga_jual" id="edit_hargajual" class="form-control" required>
+                        <input type="number" name="harga_jual" id="edit_harga_jual" class="form-control" required>
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label class="form-label">Stok awal <span>*</span></label>
-                        <input type="number" name="jumlah_stok" id="edit_stok" class="form-control" required>
+                        <label class="form-label">Stok <span>*</span></label>
+                        <input type="number" name="jumlah_stok" id="edit_jumlah_stok" class="form-control" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Minimum stok <span>*</span></label>
-                        <input type="number" name="min_stok" id="edit_minstok" class="form-control" required>
+                        <input type="number" name="min_stok" id="edit_min_stok" class="form-control" required>
                     </div>
                 </div>
 
@@ -620,100 +619,58 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Gambar baru (Kosongkan jika tidak diubah)</label>
+                        <label class="form-label">Ganti Gambar produk (Opsional)</label>
                         <input type="file" name="gambar_produk" class="form-control" accept="image/*">
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline" onclick="closeModal('modalEditProduct')">Batal</button>
-                <button type="submit" class="btn btn-primary">Update Barang</button>
+                <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
             </div>
         </form>
     </div>
 </div>
 
 <script>
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
+    // Fungsi standar buka-tutup modal dasar
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
     }
 
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-        if (event.target.classList.contains('modal-overlay')) {
-            event.target.style.display = "none";
-        }
-    }
-
-    function openModal(modalId) {
-        document.getElementById(modalId).style.display = 'flex';
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
-    }
-
-    // Tutup modal jika user klik area gelap di luarnya
-    window.onclick = function(event) {
-        if (event.target.classList.contains('modal-overlay')) {
-            event.target.style.display = 'none';
-        }
-    }
-
+    // Fungsi khusus inject data ke modal edit saat tombol icon pen diklik
     function openEditModal(button) {
-        let id = button.getAttribute('data-id');
-        let form = document.getElementById('editForm');
-        form.action = "{{ url('product') }}/" + id;
+        const id = button.getAttribute('data-id');
+        const kode = button.getAttribute('data-kode');
+        const nama = button.getAttribute('data-nama');
+        const kategori = button.getAttribute('data-kategori');
+        const satuan = button.getAttribute('data-satuan');
+        const hargabeli = button.getAttribute('data-hargabeli');
+        const hargajual = button.getAttribute('data-hargajual');
+        const stok = button.getAttribute('data-stok');
+        const minstok = button.getAttribute('data-minstok');
+        const status = button.getAttribute('data-status');
 
-        document.getElementById('edit_nama').value = button.getAttribute('data-nama');
-        document.getElementById('edit_kode').value = button.getAttribute('data-kode');
-        document.getElementById('edit_kategori').value = button.getAttribute('data-kategori');
-        document.getElementById('edit_satuan').value = button.getAttribute('data-satuan');
-        document.getElementById('edit_hargabeli').value = button.getAttribute('data-hargabeli');
-        document.getElementById('edit_hargajual').value = button.getAttribute('data-hargajual');
-        document.getElementById('edit_stok').value = button.getAttribute('data-stok');
-        document.getElementById('edit_minstok').value = button.getAttribute('data-minstok');
-        document.getElementById('edit_status').value = button.getAttribute('data-status');
+        // Isi values ke dalam form modal edit
+        document.getElementById('edit_nama_produk').value = nama;
+        document.getElementById('edit_kode_produk').value = kode;
+        document.getElementById('edit_kategori_id').value = kategori;
+        document.getElementById('edit_satuan').value = satuan;
+        document.getElementById('edit_harga_beli').value = hargabeli;
+        document.getElementById('edit_harga_jual').value = hargajual;
+        document.getElementById('edit_jumlah_stok').value = stok;
+        document.getElementById('edit_min_stok').value = minstok;
+        document.getElementById('edit_status').value = status;
 
+        // Set action form secara dinamis mengarah ke Rute PUT /product/{id}
+        document.getElementById('formEditProduct').action = `/product/${id}`;
+
+        // Tampilkan modal edit
         openModal('modalEditProduct');
     }
-
-    document.getElementById('searchInput').addEventListener('input', function() {
-    let searchQuery = this.value.toLowerCase();
-    let tableRows = document.querySelectorAll('#tableBody tr:not(#emptySearchRow)');
-    let visibleCount = 0;
-
-    // Looping semua baris tabel
-    tableRows.forEach(row => {
-        let text = row.textContent.toLowerCase();
-        if(text.includes(searchQuery)) {
-            row.style.display = ''; // Tampilkan baris
-            visibleCount++;
-        } else {
-            row.style.display = 'none'; // Sembunyikan baris
-        }
-    });
-
-    // Handle jika tidak ada barang yang cocok
-    let emptyRow = document.getElementById('emptySearchRow');
-    if(visibleCount === 0) {
-        if(!emptyRow) {
-            let tbody = document.getElementById('tableBody');
-            let tr = document.createElement('tr');
-            tr.id = 'emptySearchRow';
-            tr.innerHTML = `<td colspan="8" style="text-align: center; padding: 30px; color: #ef4444; font-weight: 500;">Berdasarkan pencarian "${this.value}", barang yang dicari tidak ada.</td>`;
-            tbody.appendChild(tr);
-        } else {
-            emptyRow.style.display = '';
-            emptyRow.innerHTML = `<td colspan="8" style="text-align: center; padding: 30px; color: #ef4444; font-weight: 500;">Berdasarkan pencarian "${this.value}", barang yang dicari tidak ada.</td>`;
-        }
-    } else {
-        if(emptyRow) emptyRow.style.display = 'none';
-    }
-    });
 </script>
 
 @endsection

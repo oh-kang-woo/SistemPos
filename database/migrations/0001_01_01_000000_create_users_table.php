@@ -11,23 +11,39 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // 1. BUAT TABEL BISNIS/TOKO TERLEBIH DAHULU
+        Schema::create('businesses', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+
+        // 2. BUAT TABEL KATEGORI (Diposisikan di sini agar siap dipakai oleh tabel produk nanti)
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id('id_kategori'); // Menggunakan id_kategori sesuai kebutuhan tokomu
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
+            $table->string('nama_kategori');
+            $table->text('deskripsi')->nullable();
+            $table->string('gambar_kategori')->nullable();
+            $table->timestamps();
+        });
+
+        // 3. BUAT TABEL USERS
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_id')->nullable()->constrained('businesses')->onDelete('cascade');
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-
-            // --- TAMBAHAN BARU UNTUK APLIKASI KASIR ---
-            $table->string('role')->default('karyawan'); // Pilihan: manajer, karyawan
-            $table->string('phone_number')->nullable(); // Nomor HP (nullable jika tidak wajib saat daftar)
-            $table->string('profile_photo')->nullable(); // Menyimpan path/nama file foto profil
-            // ------------------------------------------
-
+            $table->string('role')->default('karyawan');
+            $table->string('phone_number')->nullable();
+            $table->string('profile_photo')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
 
+        // 4. TABEL BAWAAN LARAVEL
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
@@ -49,8 +65,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
-        Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('categories');
+        Schema::dropIfExists('businesses');
     }
 };

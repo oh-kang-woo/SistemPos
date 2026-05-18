@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id('id_produk');
+
+            // --- KUNCI RELASI TOKO (MULTI-TENANT) ---
+            // Mengikat produk ini hanya untuk toko tertentu agar tidak bercampur dengan toko lain
+            $table->foreignId('business_id')->constrained('businesses')->onDelete('cascade');
+
             $table->foreignId('kategori_id')->constrained('categories', 'id_kategori')->onDelete('cascade');
             $table->string('kode_produk')->unique();
             $table->string('nama_produk');
