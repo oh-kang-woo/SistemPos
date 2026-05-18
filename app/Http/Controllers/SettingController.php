@@ -5,22 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
     public function index()
     {
-        // Ambil baris pertama dari pengaturan
-        $setting = Setting::first() ?? new Setting();
-        $users = User::all();
+        // FIX: Ambil data setting khusus milik business_id user yang sedang login
+        $businessId = Auth::user()->business_id;
+        $setting = Setting::where('business_id', $businessId)->first();
+
+        // Ambil data user yang terikat dengan bisnis yang sama saja
+        $users = User::where('business_id', $businessId)->get();
 
         return view('setting.index', compact('setting', 'users'));
     }
 
     public function updateProfil(Request $request)
     {
-        $setting = Setting::firstOrCreate([]);
+        $businessId = Auth::user()->business_id;
+
+        // FIX: Cari atau buat baru baris setting yang terikat dengan business_id user saat ini
+        $setting = Setting::firstOrCreate(['business_id' => $businessId]);
 
         $request->validate([
             'nama_toko' => 'required|string|max:255',
@@ -39,19 +45,14 @@ class SettingController extends Controller
             }
 
             $file = $request->file('logo_toko');
-            // Buat nama file unik agar tidak bentrok
             $fileName = time() . '_' . $file->getClientOriginalName();
-
-            // Pindahkan langsung ke folder public/logos
             $file->move(public_path('logos'), $fileName);
 
-            // Simpan jalur relatifnya ke database (contoh: logos/12345_logo.png)
             $data['logo_toko'] = 'logos/' . $fileName;
         }
 
         $setting->update($data);
 
-        // === KOREKSI: Mengembalikan response JSON untuk AJAX termasuk data alamat ===
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -66,7 +67,10 @@ class SettingController extends Controller
 
     public function updateStruk(Request $request)
     {
-        $setting = Setting::firstOrCreate([]);
+        $businessId = Auth::user()->business_id;
+
+        // FIX: Ambil data struk sesuai milik business_id user saat ini
+        $setting = Setting::firstOrCreate(['business_id' => $businessId]);
 
         $setting->update([
             'format_nomor_transaksi' => $request->format_nomor_transaksi,
@@ -81,23 +85,22 @@ class SettingController extends Controller
 
     public function storeUser(Request $request)
     {
-        // 1. Validasi input dari form
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
-            'role' => 'required|string' // Misal: admin atau kasir
+            'role' => 'required|string'
         ]);
 
-        // 2. Simpan user baru ke database
+        // FIX: Daftarkan user baru dengan business_id yang sama dengan sang pemilik akun saat ini
         User::create([
+            'business_id' => Auth::user()->business_id,
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password), // Password otomatis di-enkripsi
+            'password' => bcrypt($request->password),
             'role' => $request->role,
         ]);
 
-        // 3. Kembali ke halaman dengan pesan sukses
         return redirect()->back()->with('success', 'Pengguna baru berhasil ditambahkan!');
     }
 }

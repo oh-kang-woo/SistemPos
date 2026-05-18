@@ -1,7 +1,11 @@
 @php
-    // Ambil data pengaturan toko langsung dari database
-    $currentSetting = \App\Models\Setting::first();
-    $namaTokoAktif = $currentSetting ? $currentSetting->nama_toko : 'SwiftBill ';
+    // FIX: Ambil data pengaturan toko berdasarkan business_id milik user yang sedang login
+    $currentSetting = null;
+    if (auth()->check()) {
+        $currentSetting = \App\Models\Setting::where('business_id', auth()->user()->business_id)->first();
+    }
+
+    $namaTokoAktif = $currentSetting ? $currentSetting->nama_toko : 'SwiftBill';
     $alamatTokoAktif = $currentSetting ? $currentSetting->alamat_lengkap : 'Powered by our system';
 @endphp
 

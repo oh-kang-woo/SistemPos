@@ -32,35 +32,35 @@
                 @csrf
                 <div class="form-group">
                     <label class="form-label">Nama toko <span style="color: red;">*</span></label>
-                    <input type="text" name="nama_toko" class="form-control" value="{{ $setting->nama_toko }}" required>
+                    <input type="text" name="nama_toko" class="form-control" value="{{ old('nama_toko', $setting->nama_toko ?? 'Swiftbill') }}" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Alamat lengkap <span style="color: red;">*</span></label>
-                    <textarea name="alamat_lengkap" class="form-control" rows="3" required>{{ $setting->alamat_lengkap }}</textarea>
+                    <textarea name="alamat_lengkap" class="form-control" rows="3" required>{{ old('alamat_lengkap', $setting->alamat_lengkap ?? '') }}</textarea>
                 </div>
 
                 <div class="flex-row form-group">
                     <div class="flex-child">
                         <label class="form-label">Nomor telepon <span style="color: red;">*</span></label>
-                        <input type="text" name="nomor_telepon" class="form-control" value="{{ $setting->nomor_telepon }}" required>
+                        <input type="text" name="nomor_telepon" class="form-control" value="{{ old('nomor_telepon', $setting->nomor_telepon ?? '') }}" required>
                     </div>
                     <div class="flex-child">
                         <label class="form-label">Nomor WhatsApp <span style="color: red;">*</span></label>
-                        <input type="text" name="nomor_whatsapp" class="form-control" value="{{ $setting->nomor_whatsapp }}" required>
+                        <input type="text" name="nomor_whatsapp" class="form-control" value="{{ old('nomor_whatsapp', $setting->nomor_whatsapp ?? '') }}" required>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">NPWP (opsional)</label>
-                    <input type="text" name="npwp" class="form-control" value="{{ $setting->npwp }}">
+                    <input type="text" name="npwp" class="form-control" value="{{ old('npwp', $setting->npwp ?? '') }}">
                 </div>
 
                 <div class="form-group" style="margin-bottom: 24px;">
                     <label class="form-label">Logo toko (opsional)</label>
-                    @if($setting->logo_toko)
+                    @if(isset($setting) && $setting->logo_toko)
                         <div style="margin-bottom: 8px;">
-                            <img src="{{ asset('storage/'.$setting->logo_toko) }}" alt="Logo" style="height: 60px; border-radius: 6px;">
+                            <img src="{{ asset($setting->logo_toko) }}" alt="Logo" style="height: 60px; border-radius: 6px;">
                         </div>
                     @endif
                     <input type="file" name="logo_toko" class="form-control">
@@ -78,15 +78,15 @@
                 @csrf
                 <div class="form-group">
                     <label class="form-label">Format Nomor Transaksi</label>
-                    <input type="text" name="format_nomor_transaksi" class="form-control" value="{{ $setting->format_nomor_transaksi }}">
+                    <input type="text" name="format_nomor_transaksi" class="form-control" value="{{ $setting->format_nomor_transaksi ?? 'TRX-YYYY-MM-DD-++++' }}">
                     <span style="font-size: 12px; color: #94a3b8;">{DD} = Tanggal, {MM} = Bulan, {YYYY} = Tahun</span>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 24px;">
                     <label class="form-label">Reset Nomor Urut</label>
                     <select name="reset_nomor_urut" class="form-control">
-                        <option value="reset_bulan" {{ $setting->reset_nomor_urut == 'reset_bulan' ? 'selected' : '' }}>Reset setiap bulan</option>
-                        <option value="reset_tahun" {{ $setting->reset_nomor_urut == 'reset_tahun' ? 'selected' : '' }}>Reset setiap tahun</option>
+                        <option value="reset_bulan" {{ ($setting->reset_nomor_urut ?? 'reset_bulan') == 'reset_bulan' ? 'selected' : '' }}>Reset setiap bulan</option>
+                        <option value="reset_tahun" {{ ($setting->reset_nomor_urut ?? '') == 'reset_tahun' ? 'selected' : '' }}>Reset setiap tahun</option>
                     </select>
                 </div>
 
@@ -96,14 +96,14 @@
                 <div class="form-group">
                     <label class="form-label">Ukuran Kertas</label>
                     <select name="ukuran_kertas" class="form-control">
-                        <option value="Thermal 88mm" {{ $setting->ukuran_kertas == 'Thermal 88mm' ? 'selected' : '' }}>Thermal 88mm</option>
-                        <option value="Thermal 58mm" {{ $setting->ukuran_kertas == 'Thermal 58mm' ? 'selected' : '' }}>Thermal 58mm</option>
+                        <option value="Thermal 88mm" {{ ($setting->ukuran_kertas ?? 'Thermal 88mm') == 'Thermal 88mm' ? 'selected' : '' }}>Thermal 88mm</option>
+                        <option value="Thermal 58mm" {{ ($setting->ukuran_kertas ?? '') == 'Thermal 58mm' ? 'selected' : '' }}>Thermal 58mm</option>
                     </select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label class="form-label">Margin (mm)</label>
-                    <input type="number" name="margin" class="form-control" value="{{ $setting->margin }}">
+                    <input type="number" name="margin" class="form-control" value="{{ $setting->margin ?? 5 }}">
                 </div>
 
                 <div class="switch-container">
@@ -112,7 +112,7 @@
                         <span style="font-size: 12px; color: #64748b;">Cetak struk secara otomatis setelah pembayaran</span>
                     </div>
                     <label class="switch">
-                        <input type="checkbox" name="cetak_otomatis" value="1" {{ $setting->cetak_otomatis ? 'checked' : '' }}>
+                        <input type="checkbox" name="cetak_otomatis" value="1" {{ ($setting->cetak_otomatis ?? false) ? 'checked' : '' }}>
                         <span class="slider round"></span>
                     </label>
                 </div>
@@ -148,9 +148,9 @@
                     <tbody>
                         @forelse($users as $user)
                         <tr>
-                            <td style="font-weight: 500;">{{ $user->nama ?? $user->name }}</td>
+                            <td style="font-weight: 500;">{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
-                            <td><span class="badge-role">{{ $user->role ?? 'Kasir' }}</span></td>
+                            <td><span class="badge-role" style="text-transform: capitalize;">{{ $user->role ?? 'Kasir' }}</span></td>
                         </tr>
                         @empty
                         <tr>
@@ -219,26 +219,21 @@
 </div>
 
 <script>
-// FIX: Fungsi untuk berpindah antar Tab yang sebelumnya hilang
 function switchTab(event, tabId) {
-    // Hide semua konten tab
     const tabContents = document.getElementsByClassName("tab-content");
     for (let i = 0; i < tabContents.length; i++) {
         tabContents[i].style.display = "none";
     }
 
-    // Hilangkan class 'active' dari semua tombol tab
     const tabButtons = document.getElementsByClassName("tab-btn");
     for (let i = 0; i < tabButtons.length; i++) {
         tabButtons[i].classList.remove("active");
     }
 
-    // Tampilkan tab yang sedang dipilih dan set tombol menjadi aktif
     document.getElementById(tabId).style.display = "block";
     event.currentTarget.classList.add("active");
 }
 
-// FIX: Fungsi kontrol Modal Tambah Pengguna
 function bukaModalUser() {
     document.getElementById('modalNativeUser').style.display = 'flex';
 }
@@ -267,6 +262,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
+                    // Update teks navbar secara instan
                     const navbarNama = document.getElementById('navbar-nama-toko');
                     if (navbarNama) {
                         navbarNama.textContent = data.nama_toko;
@@ -277,7 +273,14 @@ document.addEventListener("DOMContentLoaded", function() {
                         navbarAlamat.textContent = data.alamat_lengkap;
                     }
 
-                    alert('Pengaturan berhasil disimpan dan Navbar diperbarui!');
+                    // Update teks sidebar secara instan jika ada id-nya
+                    const sidebarNama = document.getElementById('sidebar-nama-toko');
+                    if (sidebarNama) {
+                        sidebarNama.textContent = data.nama_toko;
+                    }
+
+                    alert('Pengaturan berhasil disimpan!');
+                    window.location.reload(); // Memaksa browser reload agar logo ikut ter-refresh bersih
                 } else {
                     alert('Gagal memperbarui profil.');
                 }

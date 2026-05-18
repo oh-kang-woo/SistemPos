@@ -1,13 +1,16 @@
 @php
-
-    $globalSetting = \App\Models\Setting::first();
+    // FIX: Ambil data setting berdasarkan business_id milik user yang sedang login
+    $globalSetting = null;
+    if (auth()->check()) {
+        $globalSetting = \App\Models\Setting::where('business_id', auth()->user()->business_id)->first();
+    }
 @endphp
 
-        <aside class="sidebar">
+<aside class="sidebar">
 
-                <div class="sidebar-header">
-                    <div class="header-brand">
-                        @if($globalSetting && $globalSetting->logo_toko)
+    <div class="sidebar-header">
+        <div class="header-brand">
+            @if($globalSetting && $globalSetting->logo_toko)
                 <div class="logo-img" style="margin-right: 12px; display: flex; align-items: center;">
                     <img
                         src="{{ asset($globalSetting->logo_toko) }}"
@@ -21,7 +24,7 @@
             @endif
 
             <div class="logo-text">
-                <h1>{{ $globalSetting->nama_toko ?? 'Pos System' }}</h1>
+                <h1>{{ $globalSetting->nama_toko ?? 'P.O.S SWIFTBILL ' }}</h1>
                 <p>Powered by Swiftbill</p>
             </div>
         </div>
@@ -63,14 +66,12 @@
     </div>
 
     <div class="sidebar-footer">
-        {{-- SEKARANG SUDAH ADA id="theme-toggle" DI BAWAH INI --}}
         <button class="menu-item" id="theme-toggle" type="button">
             <div class="menu-item-between">
                 <div class="menu-item-left">
                     <i class="fas fa-concierge-bell"></i>
                     <span>Mode Tampilan</span>
                 </div>
-                {{-- SEKARANG SUDAH ADA id="theme-icon" DI BAWAH INI --}}
                 <i class="fas fa-moon" id="theme-icon"></i>
             </div>
         </button>
