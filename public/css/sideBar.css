@@ -187,3 +187,78 @@
 .main-content {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ==========================================================================
+   PENGATURAN DARK MODE (PRODUK & NAVBAR)
+   ========================================================================== */
+
+/* Tema Warna Gelap */
+[data-theme="dark"] {
+    --bg-dark-body: #1E293B;       /* Latar belakang utama (Abu-abu Navy Gelap) */
+    --bg-dark-card: #2A374A;       /* Kotak Putih berubah menjadi Biru Navy Slate */
+    --text-dark-main: #FFFFFF;     /* Teks hitam pekat berubah jadi putih */
+    --text-dark-muted: #94A3B8;    /* Teks abu-abu berubah jadi soft blue-gray */
+    --border-dark: #3B4D66;        /* Warna border pembatas lebih gelap */
+}
+
+/* --- Sinkronisasi Halaman Kasir / Produk --- */
+[data-theme="dark"] .products-search,
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .filter-btn {
+    background-color: var(--bg-dark-card) !important;
+    border-color: var(--border-dark) !important;
+    color: var(--text-dark-main) !important;
+}
+
+[data-theme="dark"] .products-title,
+[data-theme="dark"] .product-name,
+[data-theme="dark"] .product-price {
+    color: var(--text-dark-main) !important;
+}
+
+[data-theme="dark"] .search-input {
+    background-color: transparent !important;
+    color: var(--text-dark-main) !important;
+}
+
+[data-theme="dark"] .products-subtitle,
+[data-theme="dark"] .search-icon,
+[data-theme="dark"] .search-input::placeholder,
+[data-theme="dark"] .product-code,
+[data-theme="dark"] .product-stock {
+    color: var(--text-dark-muted) !important;
+}
+
+/* Hover effect di mode gelap */
+[data-theme="dark"] .filter-btn:hover {
+    background-color: #3B4D66 !important;
+    color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .product-card:hover {
+    border-color: #CFD8DC !important; /* Highlight border putih abu saat dihover */
+}
+
+
+/* --- Sinkronisasi Top Navbar --- */
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .nav-title {
+    color: var(--text-dark-main) !important;
+}
+
+[data-theme="dark"] .page-subtitle,
+[data-theme="dark"] .nav-desc {
+    color: var(--text-dark-muted) !important;
+}
+
+[data-theme="dark"] .nav-box,
+[data-theme="dark"] .nav-btn-icon {
+    background-color: var(--bg-dark-card) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    color: var(--text-dark-main) !important;
+}
+
+[data-theme="dark"] .nav-btn-icon:hover {
+    background-color: #3B4D66 !important;
+    color: #FFFFFF !important;
+}

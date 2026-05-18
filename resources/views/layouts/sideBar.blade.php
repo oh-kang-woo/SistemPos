@@ -7,7 +7,7 @@
             </div>
             <div class="logo-text">
                 <h1>Pos System</h1>
-                <p>Sistem kasir</p>
+                <p>powered by Swiftfbill</p>
             </div>
         </div>
         <button class="toggle-btn">
@@ -48,13 +48,15 @@
     </div>
 
     <div class="sidebar-footer">
-        <button class="menu-item">
+        {{-- SEKARANG SUDAH ADA id="theme-toggle" DI BAWAH INI --}}
+        <button class="menu-item" id="theme-toggle" type="button">
             <div class="menu-item-between">
                 <div class="menu-item-left">
                     <i class="fas fa-concierge-bell"></i>
                     <span>Mode Tampilan</span>
                 </div>
-                <i class="fas fa-moon"></i>
+                {{-- SEKARANG SUDAH ADA id="theme-icon" DI BAWAH INI --}}
+                <i class="fas fa-moon" id="theme-icon"></i>
             </div>
         </button>
 
