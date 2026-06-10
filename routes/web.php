@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/app', function () { return view('layouts.app'); });
 
     // ====================================================================
-    // Modul Produk & Kategori (CRUD LENGKAP AGAR TIDAK ERROR LAGI)
+    // Modul Produk & Kategori
     // ====================================================================
     // Rute Produk
     Route::get('/products', [ProductController::class, 'index'])->name('product.index');

@@ -66,13 +66,16 @@
     </div>
 
     <div class="sidebar-footer">
-        <button class="menu-item" id="theme-toggle" type="button">
+        <button
+            class="menu-item"
+            type="button"
+            @click="darkMode = !darkMode">
             <div class="menu-item-between">
                 <div class="menu-item-left">
                     <i class="fas fa-concierge-bell"></i>
-                    <span>Mode Tampilan</span>
+                    <span x-text="darkMode ? 'Mode Terang' : 'Mode Gelap'">Mode Tampilan</span>
                 </div>
-                <i class="fas fa-moon" id="theme-icon"></i>
+                <i class="fas" :class="darkMode ? 'fa-sun' : 'fa-moon'"></i>
             </div>
         </button>
 

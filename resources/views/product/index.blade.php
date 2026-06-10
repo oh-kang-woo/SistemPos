@@ -612,4 +612,4 @@
     }
 </script>
 
-@endsection 
+@endsection

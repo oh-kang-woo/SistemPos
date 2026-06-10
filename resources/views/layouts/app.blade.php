@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id"
+      x-data="{ darkMode: localStorage.getItem('theme') === 'dark' }"
+      x-init="$watch('darkMode', val => localStorage.setItem('theme', val ? 'dark' : 'light'))"
+      :data-theme="darkMode ? 'dark' : null">
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
@@ -12,6 +15,7 @@
     <link rel="stylesheet" href="{{ asset('css/products.css') }}">
     <link rel="stylesheet" href="{{ asset('css/modalpembayaran.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
    <style>
         * { box-sizing: border-box; }
@@ -157,6 +161,150 @@
         [data-theme="dark"] a[href*="pdf"]:hover {
             background-color: #3B4D66 !important;
         }
+
+        /*Fix untuk mode gelap-terang*/
+        /* 1. Fix Logo & Teks Sidebar yang Hilang */
+        [data-theme="dark"] .sidebar-header {
+            background-color: transparent !important;
+        }
+        [data-theme="dark"] .sidebar-header h1,
+        [data-theme="dark"] .sidebar-header .logo-text h1 {
+            color: #FFFFFF !important;
+        }
+        [data-theme="dark"] .sidebar-header p,
+        [data-theme="dark"] .sidebar-header .logo-text p {
+            color: #94A3B8 !important;
+        }
+
+        /* 2. Fix Latar Belakang Modal (Overlay) Jadi Gelap Pejal */
+        /* Memaksa background overlay kembali menjadi transparan (rgba) */
+        [data-theme="dark"] .modal-overlay,
+        [data-theme="dark"] .modal-backdrop,
+        [data-theme="dark"] [class*="overlay"] {
+            background-color: rgba(15, 23, 42, 0.75) !important;
+        }
+        [data-theme="dark"] .modal-content,
+        [data-theme="dark"] [class*="modal-dialog"] > div {
+            background-color: var(--bg-dark-card) !important;
+            color: var(--text-dark-main) !important;
+            border: 1px solid var(--border-dark) !important;
+        }
+
+        /* 3. Fix Kontainer, Card, & Area Pagination yang Masih Putih */
+        [data-theme="dark"] .bg-white,
+        [data-theme="dark"] .card,
+        [data-theme="dark"] .card-body,
+        [data-theme="dark"] .pagination-container {
+            background-color: var(--bg-dark-card) !important;
+            border-color: var(--border-dark) !important;
+            color: var(--text-dark-main) !important;
+        }
+
+        /* 4. Fix Tombol Utama (Seperti "Tambah Barang") */
+        /* Diubah menjadi biru terang agar menyala dan kontras di mode gelap */
+        [data-theme="dark"] .btn-primary,
+        [data-theme="dark"] .add-product-btn,
+        [data-theme="dark"] button[class*="btn-primary"] {
+            background-color: #3b82f6 !important;
+            border: 1px solid #2563eb !important;
+            color: #ffffff !important;
+        }
+        [data-theme="dark"] .btn-primary:hover,
+        [data-theme="dark"] .add-product-btn:hover {
+            background-color: #60a5fa !important;
+        }
+
+        /* Mengalahkan aturan .main-content > div agar overlay tetap transparan */
+        [data-theme="dark"] body .main-content > .modal-overlay,
+        [data-theme="dark"] body .modal-overlay,
+        [data-theme="dark"] body .modal {
+            background-color: rgba(15, 23, 42, 0.75) !important;
+        }
+
+        /* Pastikan isi modal tetap solid dan elegan */
+        [data-theme="dark"] .modal-content {
+            background-color: var(--bg-dark-card) !important;
+            border: 1px solid var(--border-dark) !important;
+            color: var(--text-dark-main) !important;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Perbaiki warna inputan form di dalam modal */
+        [data-theme="dark"] .modal-content input,
+        [data-theme="dark"] .modal-content select,
+        [data-theme="dark"] .modal-content textarea {
+            background-color: #1A222F !important;
+            color: #FFFFFF !important;
+            border: 1px solid #3B4D66 !important;
+        }
+
+        [data-theme="dark"] .modal-header {
+            border-bottom-color: #3B4D66 !important;
+        }
+        [data-theme="dark"] .modal-footer {
+            border-top-color: #3B4D66 !important;
+        }
+
+        /* 1. Ubah background utama kotak Cart */
+        [data-theme="dark"] .cart-area {
+            background-color: var(--bg-dark-card) !important;
+            border: 1px solid var(--border-dark) !important;
+        }
+
+        /* 2. Ubah warna semua teks dasar di dalam Cart */
+        [data-theme="dark"] .cart-area h3,
+        [data-theme="dark"] .cart-area h2,
+        [data-theme="dark"] .cart-area p,
+        [data-theme="dark"] .cart-area span,
+        [data-theme="dark"] .cart-area div {
+            color: var(--text-dark-main) !important;
+        }
+
+        /* 3. Redupkan teks abu-abu terang agar nyaman di mata */
+        [data-theme="dark"] .cart-area p[style*="#94a3b8"],
+        [data-theme="dark"] .cart-area p[style*="#64748b"],
+        [data-theme="dark"] .cart-area p[style*="#475569"] {
+            color: var(--text-dark-muted) !important;
+        }
+
+        /* 4. Gelapkan background item belanjaan, badge, dan box metode */
+        [data-theme="dark"] #cart-total-items,
+        [data-theme="dark"] #cart-items-container > div,
+        [data-theme="dark"] .cart-area > div > div[style*="#eef2f6"] {
+            background-color: #1A222F !important;
+            border: 1px solid #3B4D66 !important;
+        }
+
+        /* 5. Sesuaikan warna Input form dan Dropdown Diskon */
+        [data-theme="dark"] .cart-area input,
+        [data-theme="dark"] .cart-area select {
+            background-color: #1A222F !important;
+            color: #ffffff !important;
+            border: 1px solid #3B4D66 !important;
+        }
+
+        /* 6. Gelapkan tombol QRIS & Debit (yang aslinya putih) */
+        [data-theme="dark"] .cart-area button[style*="background: white"] {
+            background-color: #1A222F !important;
+            color: #ffffff !important;
+            border-color: #3B4D66 !important;
+        }
+
+        /* 7. Perbaiki Tombol Plus/Minus dan Delete di dalam daftar belanja JavaScript */
+        [data-theme="dark"] #cart-items-container button {
+            background-color: #2A374A !important;
+            color: #ffffff !important;
+            border: 1px solid #3B4D66 !important;
+        }
+
+        [data-theme="dark"] #cart-items-container button i {
+            color: #ef4444 !important; /* Pastikan ikon tong sampah tetap merah */
+        }
+
+        /* 8. Selaraskan garis pembatas (Border-top) di atas ringkasan */
+        [data-theme="dark"] .cart-area > div[style*="border-top"] {
+            border-top-color: var(--border-dark) !important;
+        }
     </style>
 
     {{-- SCRIPT INSTAN AGAR SAAT REFRESH TIDAK ADA EFEK BERKEDIP PUTIH (FLASH LIGHT) --}}
@@ -244,36 +392,6 @@
                 modal.classList.remove('active');
             }
         });
-
-        // ==========================================
-        // 3. LOGIKA DARK / LIGHT MODE TAMPILAN
-        // ==========================================
-        const themeToggleBtn = document.getElementById("theme-toggle");
-        const themeIcon = document.getElementById("theme-icon");
-        const currentTheme = localStorage.getItem("theme") || "light";
-
-        // Atur ikon pelengkap di awal load jika dalam mode gelap
-        if (currentTheme === "dark" && themeIcon) {
-            themeIcon.classList.replace("fa-moon", "fa-sun");
-        }
-
-        if (themeToggleBtn) {
-            themeToggleBtn.addEventListener("click", function () {
-                let theme = document.documentElement.getAttribute("data-theme");
-
-                if (theme === "dark") {
-                    // Berubah ke Mode Terang
-                    document.documentElement.removeAttribute("data-theme");
-                    localStorage.setItem("theme", "light");
-                    if (themeIcon) themeIcon.classList.replace("fa-sun", "fa-moon");
-                } else {
-                    // Berubah ke Mode Gelap
-                    document.documentElement.setAttribute("data-theme", "dark");
-                    localStorage.setItem("theme", "dark");
-                    if (themeIcon) themeIcon.classList.replace("fa-moon", "fa-sun");
-                }
-            });
-        }
 
     });
 </script>
